@@ -1,12 +1,12 @@
 ---
 - name: Clonar repositório backendGitLab 
-  hosts: localhost
+  hosts: all
   gather_facts: no
   tasks:
     - name: Clonar repositório backend
       git:
         repo: https://gitlab.com/dbm-orion/backend.git
-        dest: /home/awx/orion/
+        dest: /home/awx/
         version: dev2
       environment:
-        GIT_ASKPASS: "{{ gitlab_credentials }}"
+        GIT_ASKPASS: "diogoscrobut:Cox@2016

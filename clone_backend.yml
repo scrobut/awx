@@ -10,4 +10,4 @@
         version: dev2 # Você pode especificar a branch ou tag desejada
         force: yes
       environment:
-        GIT_ASKPASS: {{ password }}
+        GIT_ASKPASS: diogoscrobut:Cox@2016

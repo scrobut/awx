@@ -1,6 +1,6 @@
 ---
 - name: Clonar repositório backendGitLab 
-  hosts: all
+  hosts: localhost
   gather_facts: no
   tasks:
     - name: Clonar repositório backend
@@ -9,4 +9,4 @@
         dest: /home/awx/orion
         version: dev2
       environment:
-        GIT_ASKPASS: "diogoscrobut:Cox@2016"
+        GIT_ASKPASS: diogoscrobut:Cox@2016

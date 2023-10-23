@@ -7,6 +7,6 @@
       git:
         repo: https://gitlab.com/dbm-orion/backend.git
         dest: /home/awx/
-        version: dev2 # Você pode especificar a branch ou tag desejada
+        version: dev2
       environment:
-        GIT_ASKPASS: diogoscrobut:Cox@2016
+        GIT_ASKPASS: "{{ gitlab_credentials }}"

@@ -1,6 +1,6 @@
 ---
 - name: Clonar repositório backendGitLab 
-  hosts: localhost
+  hosts: all
   gather_facts: no
   tasks:
     - name: Clonar repositório backend

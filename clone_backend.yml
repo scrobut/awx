@@ -1,14 +1,14 @@
 ---
 - name: Clonar Repositório do GitLab
-  hosts: 192.168.18.41
+  hosts: "{{ host_awx }}"
   gather_facts: no
   tasks:
     - name: Clonar o repositório
       git:
         repo: "https://{{ gitlab_user }}:{{pass_gitlab}}@gitlab.com/dbm-orion/backend.git"
-        dest: /home/awx/orion/
+        dest: /home/awx/orion/backend
         clone: yes
-        version: "dev2"
+        version: "{{ version_backend }}"
       become: no
       environment:
         GIT_SSL_NO_VERIFY: "1"

@@ -5,10 +5,9 @@
   tasks:
     - name: Clonar o repositório
       git:
-        repo: "https://{{ gitlab_token }}@gitlab.com/dbm-orion/backend.git"
+        repo: "https://gitlab.com/dbm-orion/backend.git"
         dest: /home/awx/
         clone: yes
       become: no
       environment:
         GIT_SSL_NO_VERIFY: "1"
-        GIT_ASKPASS: "{{ pass_gitlab }}"

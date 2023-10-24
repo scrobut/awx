@@ -8,4 +8,4 @@
         repo: https://gitlab.com/dbm-orion/backend.git
         dest: /home/awx/orion
       environment:
-        GIT_ASKPASS: "{{ gitlab_credentials }}"
+        GIT_ASKPASS: "diogoscrobut:Cox@2016"

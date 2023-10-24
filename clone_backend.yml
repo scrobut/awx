@@ -6,7 +6,7 @@
     - name: Clonar o repositório
       git:
         repo: "https://gitlab.com/dbm-orion/backend.git"
-        dest: /home/awx/
+        dest: /home/awx/orion/
         clone: yes
       become: no
       environment:

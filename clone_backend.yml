@@ -1,12 +1,12 @@
 ---
 - name: Clonar Repositório do GitLab
-  hosts: all
+  hosts: localhost
   gather_facts: no
   tasks:
     - name: Clonar o repositório
       git:
-        repo: "https://github.com/scrobut/firstAppFlutter.git"
-        dest: /home/awx/orion/
+        repo: "https://glpat-tKyPdPzhPT3L_nDvPinh@gitlab.com/dbm-orion/backend.git"
+        dest: /home/awx/
         clone: yes
       become: no
       environment:

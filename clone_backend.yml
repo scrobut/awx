@@ -8,6 +8,7 @@
         repo: "https://{{ gitlab_user }}:{{pass_gitlab}}@gitlab.com/dbm-orion/backend.git"
         dest: /home/awx/orion/
         clone: yes
+        version: "dev2"
       become: no
       environment:
         GIT_SSL_NO_VERIFY: "1"

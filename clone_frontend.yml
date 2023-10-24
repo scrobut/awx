@@ -1,0 +1,14 @@
+---
+- name: Clonar Repositório do GitLab
+  hosts: "{{ host_awx }}"
+  gather_facts: no
+  tasks:
+    - name: Clonar o repositório
+      git:
+        repo: "https://{{ gitlab_user }}:{{pass_gitlab}}@gitlab.com/dbm-orion/frontend.git"
+        dest: /home/awx/orion/frontend
+        clone: yes
+        version: "{{ version_frontend }}"
+      become: no
+      environment:
+        GIT_SSL_NO_VERIFY: "1"

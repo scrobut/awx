@@ -1,6 +1,6 @@
 ---
 - name: Clonar Repositório do GitLab
-  hosts: localhost
+  hosts: 192.168.18.41
   gather_facts: no
   tasks:
     - name: Clonar o repositório

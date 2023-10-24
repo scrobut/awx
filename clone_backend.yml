@@ -1,12 +1,12 @@
 ---
 - name: Clonar Repositório do GitLab
-  hosts: localhost
+  hosts: all
   gather_facts: no
   tasks:
     - name: Clonar o repositório
       git:
         repo: "https://gitlab.com/dbm-orion/backend.git"
-        dest: "/caminho/para/destino"
+        dest: /home/awx/
         clone: yes
       become: no
       environment:

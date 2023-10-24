@@ -5,7 +5,7 @@
   tasks:
     - name: Clonar o repositório
       git:
-        repo: "https://gitlab.com/dbm-orion/backend.git"
+        repo: "https://github.com/scrobut/firstAppFlutter.git"
         dest: /home/awx/orion/
         clone: yes
       become: no

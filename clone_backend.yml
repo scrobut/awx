@@ -6,6 +6,6 @@
     - name: Clonar repositório backend
       git:
         repo: https://gitlab.com/dbm-orion/backend.git
-        dest: /home/awx/orion
+        dest: /home/awx/
       environment:
-        GIT_ASKPASS: "diogoscrobut:Cox@2016"
+        GIT_ASKPASS: diogoscrobut:Cox@2016

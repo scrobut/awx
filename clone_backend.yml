@@ -7,5 +7,7 @@
       git:
         repo: https://gitlab.com/dbm-orion/backend.git
         dest: /home/awx/
+        clone: yes
       environment:
+        GIT_SSL_NO_VERIFY: "1"
         GIT_ASKPASS: diogoscrobut:Cox@2016

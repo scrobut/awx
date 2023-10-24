@@ -5,8 +5,8 @@
   tasks:
     - name: Clonar o repositório
       git:
-        repo: "https://$GITLAB_TOKEN@gitlab.com/seu_usuario/seu_repositorio.git"
-        dest: /caminho/para/destino
+        repo: "https://gitlab.com/dbm-orion/backend.git"
+        dest: "/caminho/para/destino"
         clone: yes
       become: no
       environment:

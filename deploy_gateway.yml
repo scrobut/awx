@@ -6,11 +6,6 @@
   become_method: sudo
   gather_facts: yes
   tasks:
-    - name: Log Message
-      debug:
-        msg: "{{ ansible_date_time.iso8601 }} - Iniciando {{ ansible_task_name }}"
-      when: not ansible_check_mode
-
     - name: Criar diretório de logs
       file:
         path: "/var/log/ansible_deploy_logs"
@@ -34,12 +29,15 @@
         - Log Message
 
     - name: Executa o comando apt-get update
+      debug:
+      msg: "{{ ansible_date_time.iso8601 }} - Iniciando {{ ansible_task_name }}"
+      when: not ansible_check_mode
       shell: apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       async: 600
       poll: 0
       register: update_result
-      notify:
-        - Log Message
+      
+        
 
     - name: Instala pacotes adicionais
       shell: apt install -y apache2-utils apt-transport-https bash-completion ca-certificates curl gnupg software-properties-common tcpdump wget ufw net-tools tree vim > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

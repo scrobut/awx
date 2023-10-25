@@ -62,7 +62,10 @@
           become: yes
           become_user: root
           become_method: sudo
-          
+          environment:
+            LC_ALL: "C"  # Define o ambiente de localização para "C" para evitar mensagens de erro.
+        
+        
         - name: Executa apt-get update (SDK)
           shell: apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           async: 600

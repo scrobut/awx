@@ -8,6 +8,18 @@
       file:
         path: "/var/log/ansible_deploy_logs"
         state: directory
+        owner: awx
+        group: sudo
+        mode: 0755
+      when: not ansible_check_mode
+
+    - name: Criar arquivo de log
+      file:
+        path: "/var/log/ansible_deploy_logs/deploy_log.txt"
+        state: touch
+        owner: awx
+        group: sudo
+        mode: 0644
       when: not ansible_check_mode
 
     - name: Executa o comando apt-get update

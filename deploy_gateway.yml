@@ -4,7 +4,7 @@
   become: yes
   tasks:
      - name: Criar arquivo de log
-        copy:
+       copy:
         content: "{{ update_result.stdout_lines | join('\n') }}"
         dest: "/var/log/deploy_gw_playbook.log"
         owner: root

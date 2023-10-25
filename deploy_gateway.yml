@@ -101,4 +101,10 @@
           {{ lookup('file', '/var/log/ansible_deploy_logs/dotnet_sdk_update.log') | default("Nenhum resultado", true) }}
 
           Instalação do .NET SDK 6.0 (Update - segunda vez):
-          {{ lookup('file', '/var
+          {{ lookup('file', '/var/log/ansible_deploy_logs/dotnet_sdk_second_update.log') | default("Nenhum resultado", true) }}
+
+          Instalação do .NET SDK 6.0:
+          {{ lookup('file', '/var/log/ansible_deploy_logs/dotnet_sdk_install.log') | default("Nenhum resultado", true) }}
+        dest: "/var/log/ansible_deploy_logs/deploy_log.txt"
+      when: update_result.changed or install_result.changed or docker_install_result.changed or dotnet_sdk_update_result.changed or dotnet_sdk_second_update_result.changed or dotnet_sdk_install_result.changed
+    

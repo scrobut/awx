@@ -29,14 +29,13 @@
         - Log Message
 
     - name: Executa o comando apt-get update
-      debug:
-      msg: "{{ ansible_date_time.iso8601 }} - Iniciando {{ ansible_task_name }}"
-      when: not ansible_check_mode
       shell: apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       async: 600
       poll: 0
       register: update_result
-      
+      debug:
+      msg: "{{ ansible_date_time.iso8601 }} - Iniciando {{ ansible_task_name }}"
+      when: not ansible_check_mode
         
 
     - name: Instala pacotes adicionais

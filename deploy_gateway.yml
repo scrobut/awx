@@ -2,13 +2,13 @@
 - name: Inicia Deploy Gateway
   hosts: "{{ host_awx }}"
   become: yes
-  gather_facts: yes  # Garante a coleta de informações do sistema
+  gather_facts: yes
   tasks:
     - name: Criar diretório de logs
       file:
         path: "/var/log/ansible_deploy_logs"
         state: directory
-      when: not ansible_check_mode  # Cria o diretório apenas em execuções reais
+      when: not ansible_check_mode # Cria o diretório apenas em execuções reais
 
     - name: Executa o comando apt-get update
       apt:
@@ -21,41 +21,8 @@
       debug:
         var: update_result
 
-    - name: Log do resultado da atualização
+    - name: Log do resultado da atualização 
       copy:
-        content: "{{ update_result.stdout }}"
+        content: "{{ update_result.stdout | default('No output') }}"
         dest: "/var/log/ansible_deploy_logs/update_result.log"
       when: update_result.changed
-
-    - name: Instala pacotes adicionais
-      apt:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - apache2-utils
-        - apt-transport-https
-        - bash-completion
-        - ca-certificates
-        - curl
-        - gnupg
-        - software-properties-common
-        - tcpdump
-        - wget
-        - ufw
-        - net-tools
-        - tree
-        - vim
-      register: install_result
-      ignore_errors: yes
-      changed_when: install_result.changed
-
-    - name: Exibe resultado da instalação
-      debug:
-        var: install_result
-
-    - name: Log do resultado da instalação
-      copy:
-        content: "{{ install_result.stdout }}"
-        dest: "/var/log/ansible_deploy_logs/install_result.log"
-      when: install_result.changed
-

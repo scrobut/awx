@@ -29,13 +29,11 @@
         - Log Message
 
     - name: Log Message Iniciando deploy
-      debug:
-        msg: "{{ ansible_date_time.iso8601 }} - {{ ansible_task_name }}"
+      shell: echo "{{ ansible_date_time.iso8601 }} - {{ ansible_task_name }}" > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       when: not ansible_check_mode
 
     - name: Log Message Iniciando apdate
-      debug:
-        msg: "{{ ansible_date_time.iso8601 }} - #### INICIANDO UPDATE ####"
+      shell: echo "{{ ansible_date_time.iso8601 }} - #### INICIANDO UPDATE ####" > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       when: not ansible_check_mode    
     - name: Executa o comando apt-get update
       

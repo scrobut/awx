@@ -2,15 +2,30 @@
 - name: Inicia Deploy Gateway
   hosts: "{{ host_awx }}"
   become: yes
+  gather_facts: yes  # Garante a coleta de informações do sistema
   tasks:
+    - name: Criar diretório de logs
+      file:
+        path: "/var/log/ansible_deploy_logs"
+        state: directory
+      when: not ansible_check_mode  # Cria o diretório apenas em execuções reais
+
     - name: Executa o comando apt-get update
       apt:
         update_cache: yes
       register: update_result
+      ignore_errors: yes
+      changed_when: update_result.changed
 
-    - name: Exibe resultado da atualizacao
+    - name: Exibe resultado da atualização
       debug:
         var: update_result
+
+    - name: Log do resultado da atualização
+      copy:
+        content: "{{ update_result.stdout }}"
+        dest: "/var/log/ansible_deploy_logs/update_result.log"
+      when: update_result.changed
 
     - name: Instala pacotes adicionais
       apt:
@@ -30,11 +45,17 @@
         - net-tools
         - tree
         - vim
+      register: install_result
+      ignore_errors: yes
+      changed_when: install_result.changed
 
-    - name: Criar arquivo de log
+    - name: Exibe resultado da instalação
+      debug:
+        var: install_result
+
+    - name: Log do resultado da instalação
       copy:
-        content: "{{ update_result.stdout_lines | join('\n') }}"
-        dest: "/var/log/deploy_gw_playbook.log"
-        owner: root
-        group: root
-        mode: '0644'
+        content: "{{ install_result.stdout }}"
+        dest: "/var/log/ansible_deploy_logs/install_result.log"
+      when: install_result.changed
+

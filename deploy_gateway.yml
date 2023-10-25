@@ -79,7 +79,7 @@
             update_cache: yes
           become: yes
 
-        - name: Instala o pacote dotnet-sdk-6.0
+        - name: Instala o pacote dotnet-sdk-6
           apt:
             name: dotnet-sdk-6.0
             state: present

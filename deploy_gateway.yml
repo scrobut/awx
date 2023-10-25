@@ -29,22 +29,19 @@
         - Log Message
 
     - name: Log Message Iniciando deploy
-      shell: echo "{{ ansible_date_time.iso8601 }} - {{ ansible_task_name }}" > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: echo "#### INICIANDO UPDATE ####" > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       when: not ansible_check_mode
 
     - name: Log Message Iniciando apdate
-      shell: echo "{{ ansible_date_time.iso8601 }} - #### INICIANDO UPDATE ####" > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      commad: echo "#### INICIANDO UPDATE ####" > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       when: not ansible_check_mode    
     - name: Executa o comando apt-get update
-      
       
       shell: apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       async: 600
       poll: 0
       register: update_result
       
-        
-
     - name: Instala pacotes adicionais
       shell: apt install -y apache2-utils apt-transport-https bash-completion ca-certificates curl gnupg software-properties-common tcpdump wget ufw net-tools tree vim > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       async: 600

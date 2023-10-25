@@ -29,15 +29,10 @@
         - Log Message
 
     - name: Log Message Iniciando deploy
-      command: echo "#### INICIANDO DEPLOY ####" >> /var/log/ansible_deploy_logs/deploy_log.txt
-      args:
-        warn: no
-      when: not ansible_check_mode
-
-    - name: Log Message Iniciando update
-      command: echo "#### INICIANDO UPDATE ####" >> /var/log/ansible_deploy_logs/deploy_log.txt
-      args:
-        warn: no
+      lineinfile:
+        path: /var/log/ansible_deploy_logs/deploy_log.txt
+        line: "#### INICIANDO DEPLOY ####"
+        create: yes
       when: not ansible_check_mode
         
     - name: Executa o comando apt-get update

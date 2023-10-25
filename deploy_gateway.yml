@@ -14,8 +14,7 @@
         group: sudo
         mode: 0755
       when: not ansible_check_mode
-      notify:
-        - Log Message
+
 
     - name: Criar arquivo de log
       file:
@@ -25,14 +24,9 @@
         group: sudo
         mode: 0644
       when: not ansible_check_mode
-      notify:
-        - teste
-
+     
     - name: Log Message Iniciando deploy
       command: echo "#### INICIANDO UPDATE ####" >> /var/log/ansible_deploy_logs/deploy_log.txt
-      args:
-        warn: no
-      when: not ansible_check_mode
         
     - name: Executa o comando apt-get update
       shell: apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

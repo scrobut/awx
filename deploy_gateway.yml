@@ -23,7 +23,7 @@
       when: not ansible_check_mode
 
     - name: Executa o comando apt-get update
-      command: sudo apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      command: apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       args:
         warn: no
       async: 600
@@ -31,7 +31,7 @@
       register: update_result
 
     - name: Instala pacotes adicionais
-      command: sudo apt install -y apache2-utils apt-transport-https bash-completion ca-certificates curl gnupg software-properties-common tcpdump wget ufw net-tools tree vim > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      command: apt install -y apache2-utils apt-transport-https bash-completion ca-certificates curl gnupg software-properties-common tcpdump wget ufw net-tools tree vim > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       args:
         warn: no
       async: 600
@@ -39,7 +39,7 @@
       register: install_result
 
     - name: Instalando Docker
-      command: sudo apt install -y docker.io >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      command: apt install -y docker.io >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       args:
         warn: no
       async: 600
@@ -66,7 +66,7 @@
           become: yes
 
         - name: Executa apt-get update (SDK)
-          command: sudo apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+          command: apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           args:
             warn: no
           async: 600
@@ -80,7 +80,7 @@
           become: yes
 
         - name: Executa apt-get update (SDK - segunda vez)
-          command: sudo apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+          command: apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           args:
             warn: no
           async: 600
@@ -88,7 +88,7 @@
           register: dotnet_sdk_second_update_result
 
         - name: Instala o pacote dotnet-sdk-6
-          command: sudo apt install -y dotnet-sdk-6.0 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+          command: apt install -y dotnet-sdk-6.0 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           args:
             warn: no
           async: 600

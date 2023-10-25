@@ -56,7 +56,7 @@
           become: yes
 
         - name: Instala o pacote de configuração do repositório do Microsoft
-          command: sudo dpkg -i ~/packages-microsoft-prod.deb
+          shell: sudo dpkg -i ~/packages-microsoft-prod.deb
           become: yes
 
         - name: Executa apt-get update (SDK)

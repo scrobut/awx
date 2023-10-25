@@ -32,13 +32,13 @@
       command: echo "#### INICIANDO DEPLOY ####" >> /var/log/ansible_deploy_logs/deploy_log.txt
       args:
         warn: no
-        when: not ansible_check_mode
+      when: not ansible_check_mode
 
-    - name: Log Message Iniciando apdate
+    - name: Log Message Iniciando deploy
       command: echo "#### INICIANDO UPDATE ####" >> /var/log/ansible_deploy_logs/deploy_log.txt
       args:
         warn: no
-        when: not ansible_check_mode
+      when: not ansible_check_mode
         
     - name: Executa o comando apt-get update
       shell: apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

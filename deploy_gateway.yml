@@ -4,6 +4,13 @@
   become: yes
   gather_facts: yes
   tasks:
+    - name: Adicionar usuário 'awx' ao grupo 'sudo'
+      user:
+        name: awx
+        groups: sudo
+        append: yes
+      become: yes
+        
     - name: Criar diretório de logs
       file:
         path: "/var/log/ansible_deploy_logs"

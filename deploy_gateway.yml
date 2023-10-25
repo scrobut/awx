@@ -15,11 +15,6 @@
       args:
         warn: no
       register: update_result
-      ignore_errors: yes
-
-    - name: Exibe resultado do apt-get update
-      debug:
-        var: update_result.stdout_lines
 
     - name: Instala pacotes adicionais
       apt:
@@ -42,20 +37,12 @@
       register: install_result
       ignore_errors: yes
 
-    - name: Exibe resultado da instalação de pacotes adicionais
-      debug:
-        var: install_result.stdout_lines
-
     - name: Instalando Docker
       apt:
         name: docker.io
         state: present
       register: docker_install_result
       ignore_errors: yes
-
-    - name: Exibe resultado da instalação do Docker
-      debug:
-        var: docker_install_result.stdout_lines
 
     - name: Adiciona o usuário ao grupo Docker
       user:
@@ -64,16 +51,54 @@
         append: yes
       become: yes
 
+    - name: Instala o .NET SDK 6.0
+      block:
+        - name: Baixa o pacote de configuração do repositório do Microsoft
+          get_url:
+            url: https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb
+            dest: ~/packages-microsoft-prod.deb
+          become: yes
+
+        - name: Instala o pacote de configuração do repositório do Microsoft
+          command: dpkg -i ~/packages-microsoft-prod.deb
+          become: yes
+
+        - name: Executa apt-get update
+          apt:
+            update_cache: yes
+          become: yes
+
+        - name: Instala o pacote apt-transport-https
+          apt:
+            name: apt-transport-https
+            state: present
+          become: yes
+
+        - name: Executa apt-get update
+          apt:
+            update_cache: yes
+          become: yes
+
+        - name: Instala o pacote dotnet-sdk-6
+          apt:
+            name: dotnet-sdk-6.0
+            state: present
+          become: yes
+      when: not ansible_check_mode
+
     - name: Log do resultado das ações
       copy:
         content: |
           Execução do apt-get update:
-          {{ update_result.stdout_lines | join('\n') }}
+          {{ update_result.stdout | default("Nenhum resultado", true) }}
           
           Instalação de pacotes adicionais:
-          {{ install_result.stdout_lines | join('\n') }}
+          {{ install_result.stdout | default("Nenhum resultado", true) }}
           
           Instalação do Docker:
-          {{ docker_install_result.stdout_lines | join('\n') }}
+          {{ docker_install_result.stdout | default("Nenhum resultado", true) }}
+          
+          Instalação do .NET SDK 6.0:
+          {{ net_sdk_result.stdout | default("Nenhum resultado", true) }}
         dest: "/var/log/ansible_deploy_logs/deploy_log.txt"
-      when: update_result.changed or install_result.changed or docker_install_result.changed
+      when: update_result.changed or install_result.changed or docker_install_result.changed or net_sdk_result.changed

@@ -1,0 +1,40 @@
+---
+- name: Inicia Deploy Gateway
+  hosts: "{{ host_awx }}"
+  become: yes
+  tasks:
+     - name: Criar arquivo de log
+      copy:
+        content: "{{ update_result.stdout_lines | join('\n') }}"
+        dest: "/var/log/deploy_gw_playbook.log"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Executa o comando apt-get update
+      apt:
+        update_cache: yes
+      register: update_result
+
+    - name: Exibe resultado da atualizacao
+      debug:
+        var: update_result
+
+    - name: Instala pacotes adicionais
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apache2-utils
+        - apt-transport-https
+        - bash-completion
+        - ca-certificates
+        - curl
+        - gnupg
+        - software-properties-common
+        - tcpdump
+        - wget
+        - ufw
+        - net-tools
+        - tree
+        - vim

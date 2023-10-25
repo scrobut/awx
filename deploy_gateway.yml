@@ -56,7 +56,10 @@
             url: https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb
             dest: ~/packages-microsoft-prod.deb
           become: yes
-
+        - name: Espera 5 segundos para permitir que o repositório seja configurado
+          pause:
+            seconds: 8
+          
         - name: Instala o pacote de configuração do repositório do Microsoft
           shell: sudo dpkg -i ~/packages-microsoft-prod.deb
           become: yes
@@ -64,10 +67,6 @@
           become_method: sudo
           environment:
             LC_ALL: "C"  # Define o ambiente de localização para "C" para evitar mensagens de erro.
-
-        - name: Espera 5 segundos para permitir que o repositório seja configurado
-          pause:
-            seconds: 8
 
         - name: Executa apt-get update (SDK)
           shell: apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

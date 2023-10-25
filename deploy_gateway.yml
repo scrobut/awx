@@ -45,11 +45,11 @@
       ignore_errors: yes
 
     - name: Adiciona o usuário ao grupo Docker
-      shell: sudo usermod -aG docker $USER
-      args:
-        warn: no
-      register: add_user_to_docker_result
-      ignore_errors: yes
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+      become: yes
 
     - name: Log do resultado das ações
       copy:

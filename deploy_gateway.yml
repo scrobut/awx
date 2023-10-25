@@ -3,14 +3,6 @@
   hosts: "{{ host_awx }}"
   become: yes
   tasks:
-     - name: Criar arquivo de log
-       copy:
-        content: "{{ update_result.stdout_lines | join('\n') }}"
-        dest: "/var/log/deploy_gw_playbook.log"
-        owner: root
-        group: root
-        mode: '0644'
-
     - name: Executa o comando apt-get update
       apt:
         update_cache: yes
@@ -38,3 +30,11 @@
         - net-tools
         - tree
         - vim
+
+    - name: Criar arquivo de log
+      copy:
+        content: "{{ update_result.stdout_lines | join('\n') }}"
+        dest: "/var/log/deploy_gw_playbook.log"
+        owner: root
+        group: root
+        mode: '0644'

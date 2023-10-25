@@ -35,7 +35,13 @@
       register: update_result
       notify:
         - Log Message
-      
+
+    - name: Espera 1 segundos 
+      pause:
+        seconds: 1
+      notify:
+        - Log Message
+        - 
     - name: Log Message Iniciando deploy
       shell: echo  "\033[32m####_INICIANDO_INSTALACAO_DE_PACOTES_ADICIONAIS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       
@@ -46,6 +52,13 @@
       register: install_result
       notify:
         - Log Message
+
+    - name: Espera 1 segundos
+      pause:
+        seconds: 1
+      notify:
+        - Log Message
+        - 
     - name: Log Message Iniciando deploy
       shell: echo  "\033[32m####_INICIANDO_INSTALACAO_DOCKER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       
@@ -57,6 +70,12 @@
       notify:
         - Log Message
 
+    - name: Espera 1 segundos
+      pause:
+        seconds: 1
+      notify:
+        - Log Message
+        
     - name: Log Message Iniciando deploy
       shell: echo  "\033[32m####_ADICIONANDO_USUARIO_AO_GRUPO_DOCKER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       
@@ -68,7 +87,12 @@
       become: yes
       notify:
         - Log Message
-
+    - name: Espera 1 segundos
+      pause:
+        seconds: 1
+      notify:
+        - Log Message
+          
     - name: Log Message Iniciando deploy
       shell: echo  "\033[32m####_INICIANDO_INSTALACAO_SDK_DOTNET####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       
@@ -78,7 +102,12 @@
           debug:
             msg: "{{ ansible_date_time.iso8601 }} - Iniciando a instalação do .NET SDK 6.0"
           when: not ansible_check_mode
-
+        - name: Espera 1 segundos
+          pause:
+            seconds: 1
+          notify:
+            - Log Message
+              
         - name: Log Message Iniciando deploy
           shell: echo  "\033[32m####_BAIXANDO_CONF_MICROSOFT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           
@@ -89,12 +118,19 @@
           become: yes
           notify:
             - Log Message
-
+            
+        - name: Espera 1 segundos
+          pause:
+            seconds: 1
+          notify:
+            - Log Message
+              
         - name: Espera 8 segundos para permitir que o repositório seja configurado
           pause:
             seconds: 8
           notify:
             - Log Message
+            
         - name: Log Message Iniciando deploy
           shell: echo  "\033[32m####_REALIZANDO_INSTALACAO_DOS_PACOTES_MICROSOFT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           
@@ -107,7 +143,13 @@
             LC_ALL: "C"  # Define o ambiente de localização para "C" para evitar mensagens de erro.
           notify:
             - Log Message
-
+              
+        - name: Espera 1 segundos
+          pause:
+            seconds: 1
+          notify:
+            - Log Message
+              
         - name: Executa apt-get update (SDK)
           shell: apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           async: 600
@@ -123,6 +165,12 @@
           become: yes
           notify:
             - Log Message
+        - name: Espera 1 segundos
+          pause:
+            seconds: 1
+          notify:
+            - Log Message
+              
         - name: Log Message Iniciando deploy
           shell: echo  "\033[32m####_INICIANDO_UPDATE_SDK####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           
@@ -133,7 +181,13 @@
           register: dotnet_sdk_second_update_result
           notify:
             - Log Message
-
+              
+        - name: Espera 1 segundos
+          pause:
+            seconds: 1
+          notify:
+            - Log Message
+              
         - name: Instala o pacote dotnet-sdk-6
           shell: apt install -y dotnet-sdk-6.0 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           async: 600
@@ -142,6 +196,12 @@
           notify:
             - Log Message
 
+        - name: Espera 1 segundos
+          pause:
+            seconds: 1
+          notify:
+            - Log Message
+              
         - name: Log Message Iniciando deploy
           shell: echo  "\033[32m####_VERSAO_DOTNET####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 

@@ -15,34 +15,24 @@
       args:
         warn: no
       register: update_result
+      async: 300
+      poll: 0
 
     - name: Instala pacotes adicionais
-      apt:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - apache2-utils
-        - apt-transport-https
-        - bash-completion
-        - ca-certificates
-        - curl
-        - gnupg
-        - software-properties-common
-        - tcpdump
-        - wget
-        - ufw
-        - net-tools
-        - tree
-        - vim
+      shell: apt install -y apache2-utils apt-transport-https bash-completion ca-certificates curl gnupg software-properties-common tcpdump wget ufw net-tools tree vim
+      args:
+        warn: no
       register: install_result
-      ignore_errors: yes
+      async: 300
+      poll: 0
 
     - name: Instalando Docker
-      apt:
-        name: docker.io
-        state: present
+      shell: apt install -y docker.io
+      args:
+        warn: no
       register: docker_install_result
-      ignore_errors: yes
+      async: 300
+      poll: 0
 
     - name: Adiciona o usuário ao grupo Docker
       user:
@@ -91,14 +81,18 @@
         content: |
           Execução do apt-get update:
           {{ update_result.stdout | default("Nenhum resultado", true) }}
-          
+          {{ update_result.stderr | default("Nenhum erro", true) }}
+
           Instalação de pacotes adicionais:
           {{ install_result.stdout | default("Nenhum resultado", true) }}
-          
+          {{ install_result.stderr | default("Nenhum erro", true) }}
+
           Instalação do Docker:
           {{ docker_install_result.stdout | default("Nenhum resultado", true) }}
-          
+          {{ docker_install_result.stderr | default("Nenhum erro", true) }}
+
           Instalação do .NET SDK 6.0:
           {{ net_sdk_result.stdout | default("Nenhum resultado", true) }}
+          {{ net_sdk_result.stderr | default("Nenhum erro", true) }}
         dest: "/var/log/ansible_deploy_logs/deploy_log.txt"
       when: update_result.changed or install_result.changed or docker_install_result.changed or net_sdk_result.changed

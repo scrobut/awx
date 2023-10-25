@@ -55,15 +55,15 @@
       copy:
         content: |
           Execução do apt-get update:
-          {{ update_result.stdout }}
+          {{ update_result.stdout | default("Nenhum resultado", true) }}
           
           Instalação de pacotes adicionais:
-          {{ install_result.stdout }}
+          {{ install_result.stdout | default("Nenhum resultado", true) }}
           
           Instalação do Docker:
-          {{ docker_install_result.stdout }}
+          {{ docker_install_result.stdout | default("Nenhum resultado", true) }}
           
           Adição do usuário ao grupo Docker:
-          {{ add_user_to_docker_result.stdout }}
+          {{ add_user_to_docker_result.stdout | default("Nenhum resultado", true) }}
         dest: "/var/log/ansible_deploy_logs/deploy_log.txt"
       when: update_result.changed or install_result.changed or docker_install_result.changed or add_user_to_docker_result.changed

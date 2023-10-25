@@ -26,13 +26,12 @@
         mode: 0644
       when: not ansible_check_mode
       notify:
-        - Log Message
+        - teste
 
     - name: Log Message Iniciando deploy
-      lineinfile:
-        path: /var/log/ansible_deploy_logs/deploy_log.txt
-        line: "#### INICIANDO DEPLOY ####"
-        create: yes
+      command: echo "#### INICIANDO UPDATE ####" >> /var/log/ansible_deploy_logs/deploy_log.txt
+      args:
+        warn: no
       when: not ansible_check_mode
         
     - name: Executa o comando apt-get update
@@ -55,7 +54,7 @@
       poll: 0
       register: docker_install_result
       notify:
-        - Log Message
+        - teste2
 
     - name: Adiciona o usuário ao grupo Docker
       user:

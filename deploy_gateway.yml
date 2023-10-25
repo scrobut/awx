@@ -26,7 +26,7 @@
       when: not ansible_check_mode
      
     - name: Log Message Iniciando deploy
-      shell: echo "####_INICIANDO_UPDATE####" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: echo -e "\033[31m####_INICIANDO_UPDATE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
         
     - name: Executa o comando apt-get update
       shell: apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

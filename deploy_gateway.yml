@@ -58,7 +58,7 @@
           become: yes
 
         - name: Instala o pacote de configuração do repositório do Microsoft
-          command: dpkg -i ~/packages-microsoft-prod.deb
+          shell: dpkg -i ~/packages-microsoft-prod.deb
           become: yes
           become_user: root
           become_method: sudo

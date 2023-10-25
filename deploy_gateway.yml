@@ -34,6 +34,18 @@
       poll: 0
       register: docker_install_result
 
+    - name: Aguardar conclusão das tarefas de comando
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      register: job_result
+      until: job_result.finished
+      retries: 600
+      delay: 10
+      loop:
+        - "{{ update_result }}"
+        - "{{ install_result }}"
+        - "{{ docker_install_result }}"
+
     - name: Adiciona o usuário ao grupo Docker
       user:
         name: "{{ ansible_user }}"
@@ -61,6 +73,16 @@
           poll: 0
           register: dotnet_sdk_update_result
 
+        - name: Aguardar conclusão das tarefas de comando (SDK)
+          async_status:
+            jid: "{{ item.ansible_job_id }}"
+          register: dotnet_sdk_job_result
+          until: dotnet_sdk_job_result.finished
+          retries: 600
+          delay: 10
+          loop:
+            - "{{ dotnet_sdk_update_result }}"
+
         - name: Instala o pacote apt-transport-https
           apt:
             name: apt-transport-https
@@ -75,6 +97,16 @@
           poll: 0
           register: dotnet_sdk_second_update_result
 
+        - name: Aguardar conclusão das tarefas de comando (SDK - segunda vez)
+          async_status:
+            jid: "{{ item.ansible_job_id }}"
+          register: dotnet_sdk_second_job_result
+          until: dotnet_sdk_second_job_result.finished
+          retries: 600
+          delay: 10
+          loop:
+            - "{{ dotnet_sdk_second_update_result }}"
+
         - name: Instala o pacote dotnet-sdk-6
           command: apt install -y dotnet-sdk-6.0 > /var/log/ansible_deploy_logs/dotnet_sdk_install.log 2>&1
           args:
@@ -82,6 +114,16 @@
           async: 600
           poll: 0
           register: dotnet_sdk_install_result
+
+        - name: Aguardar conclusão das tarefas de comando (SDK - terceira vez)
+          async_status:
+            jid: "{{ item.ansible_job_id }}"
+          register: dotnet_sdk_install_job_result
+          until: dotnet_sdk_install_job_result.finished
+          retries: 600
+          delay: 10
+          loop:
+            - "{{ dotnet_sdk_install_result }}"
 
       when: not ansible_check_mode
 
@@ -107,4 +149,3 @@
           {{ lookup('file', '/var/log/ansible_deploy_logs/dotnet_sdk_install.log') | default("Nenhum resultado", true) }}
         dest: "/var/log/ansible_deploy_logs/deploy_log.txt"
       when: update_result.changed or install_result.changed or docker_install_result.changed or dotnet_sdk_update_result.changed or dotnet_sdk_second_update_result.changed or dotnet_sdk_install_result.changed
-    

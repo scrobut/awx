@@ -26,7 +26,7 @@
       when: not ansible_check_mode
      
     - name: Log Message Iniciando deploy
-      command: echo "####_INICIANDO_UPDATE####" >> /var/log/ansible_deploy_logs/deploy_log.txt
+      shell: echo "####_INICIANDO_UPDATE####" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
         
     - name: Executa o comando apt-get update
       shell: apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
@@ -48,7 +48,7 @@
       poll: 0
       register: docker_install_result
       notify:
-        - teste2
+        - Log Message
 
     - name: Adiciona o usuário ao grupo Docker
       user:

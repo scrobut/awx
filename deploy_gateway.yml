@@ -57,6 +57,9 @@
 
         - name: Instala o pacote de configuração do repositório do Microsoft
           command: sudo dpkg -i ~/packages-microsoft-prod.deb
+          become: yes
+          become_user: root
+          become_method: sudo
 
         - name: Executa apt-get update (SDK)
           shell: apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

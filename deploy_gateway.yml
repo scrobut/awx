@@ -34,7 +34,7 @@
         warn: no
       when: not ansible_check_mode
 
-    - name: Log Message Iniciando deploy
+    - name: Log Message Iniciando update
       command: echo "#### INICIANDO UPDATE ####" >> /var/log/ansible_deploy_logs/deploy_log.txt
       args:
         warn: no

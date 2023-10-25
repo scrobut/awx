@@ -5,33 +5,18 @@
   gather_facts: yes
   tasks:
     - name: Criar diretório de logs
-      # Tarefa que cria um diretório para armazenar os arquivos de log.
       file:
         path: "/var/log/ansible_deploy_logs"
         state: directory
       when: not ansible_check_mode
 
     - name: Executa o comando apt-get update
-      # Tarefa que executa o comando "apt-get update" para atualizar o cache de pacotes.
       shell: apt-get update
       args:
         warn: no
       register: update_result
 
-    - name: Exibe resultado da atualização
-      # Tarefa que exibe o resultado da atualização no console.
-      debug:
-        var: update_result
-
-    - name: Log do resultado da atualização
-      # Tarefa que registra a saída da atualização em um arquivo de log único.
-      copy:
-        content: "{{ update_result.stdout }}"
-        dest: "/var/log/ansible_deploy_logs/deploy_log.txt"
-      when: update_result.changed
-
     - name: Instala pacotes adicionais
-      # Tarefa que utiliza o módulo "apt" para instalar pacotes adicionais.
       apt:
         name: "{{ item }}"
         state: present
@@ -51,10 +36,8 @@
         - vim
       register: install_result
       ignore_errors: yes
-      changed_when: install_result.changed
 
     - name: Instalando Docker
-      # Tarefa que utiliza o módulo "apt" para instalar o Docker.
       apt:
         name: docker.io
         state: present
@@ -62,45 +45,25 @@
       ignore_errors: yes
 
     - name: Adiciona o usuário ao grupo Docker
-      # Tarefa que adiciona o usuário atual ao grupo Docker.
       shell: sudo usermod -aG docker $USER
       args:
         warn: no
       register: add_user_to_docker_result
       ignore_errors: yes
 
-    - name: Exibe resultado da instalação
-      # Tarefa que exibe o resultado da instalação dos pacotes adicionais no console.
-      debug:
-        var: install_result
-
-    - name: Log do resultado da instalação
-      # Tarefa que registra a saída da instalação dos pacotes adicionais em um arquivo de log único.
+    - name: Log do resultado das ações
       copy:
-        content: "{{ install_result.stdout }}"
+        content: |
+          Execução do apt-get update:
+          {{ update_result.stdout }}
+          
+          Instalação de pacotes adicionais:
+          {{ install_result.stdout }}
+          
+          Instalação do Docker:
+          {{ docker_install_result.stdout }}
+          
+          Adição do usuário ao grupo Docker:
+          {{ add_user_to_docker_result.stdout }}
         dest: "/var/log/ansible_deploy_logs/deploy_log.txt"
-      when: install_result.changed
-
-    - name: Exibe resultado da instalação do Docker
-      # Tarefa que exibe o resultado da instalação do Docker no console.
-      debug:
-        var: docker_install_result
-
-    - name: Log do resultado da instalação do Docker
-      # Tarefa que registra a saída da instalação do Docker em um arquivo de log único.
-      copy:
-        content: "{{ docker_install_result.stdout }}"
-        dest: "/var/log/ansible_deploy_logs/deploy_log.txt"
-      when: docker_install_result.changed
-
-    - name: Exibe resultado da adição do usuário ao grupo Docker
-      # Tarefa que exibe o resultado da adição do usuário ao grupo Docker no console.
-      debug:
-        var: add_user_to_docker_result
-
-    - name: Log do resultado da adição do usuário ao grupo Docker
-      # Tarefa que registra a saída da adição do usuário ao grupo Docker em um arquivo de log único.
-      copy:
-        content: "{{ add_user_to_docker_result.stdout }}"
-        dest: "/var/log/ansible_deploy_logs/deploy_log.txt"
-      when: add_user_to_docker_result.changed
+      when: update_result.changed or install_result.changed or docker_install_result.changed or add_user_to_docker_result.changed

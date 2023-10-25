@@ -41,13 +41,13 @@
       when: not ansible_check_mode
         
     - name: Executa o comando apt-get update
-      shell: apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt
       async: 600
       poll: 0
       register: update_result
       
     - name: Instala pacotes adicionais
-      shell: apt install -y apache2-utils apt-transport-https bash-completion ca-certificates curl gnupg software-properties-common tcpdump wget ufw net-tools tree vim > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: apt install -y apache2-utils apt-transport-https bash-completion ca-certificates curl gnupg software-properties-common tcpdump wget ufw net-tools tree vim > /var/log/ansible_deploy_logs/deploy_log.txt
       async: 600
       poll: 0
       register: install_result
@@ -55,7 +55,7 @@
         - Log Message
 
     - name: Instalando Docker
-      shell: apt install -y docker.io >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: apt install -y docker.io >> /var/log/ansible_deploy_logs/deploy_log.txt
       async: 600
       poll: 0
       register: docker_install_result

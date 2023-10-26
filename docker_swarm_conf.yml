@@ -15,15 +15,12 @@
         swarm_join_token: "{{ swarm_init_output.stdout }}"
       when: swarm_init_output.stdout is defined
 
-- name: Acessar Nó para Ingressar no Swarm
-  hosts: "{{ host_voice }}"  # O nó onde você deseja ingressar no Swarm
-  become: yes
-
-  tasks:
-    - name: Ingressar no Docker Swarm como manager
-      hosts: "{{ host_voice }}"
-      command: "{{ swarm_join_token }}"
-      when: swarm_join_token is defined
+      tasks:
+        - name: Ingressar no Docker Swarm como manager
+          hosts: "{{ host_voice }}"
+          command: "{{ swarm_join_token }}"
+          become: yes
+          when: swarm_join_token is defined
 
 - name: Verificar Status do Nó no Swarm
   hosts: "{{ host_awx }}"  # Volte ao nó mestre para verificar o status

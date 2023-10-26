@@ -6,29 +6,30 @@
   become_method: sudo  # Define o método de se tornar como sudo
   gather_facts: yes  # Coletar fatos sobre os hosts de destino
   tasks:  # Lista de tarefas a serem executadas
-  - name: Inicializar Docker Swarm
-    command: docker swarm init
-    register: swarm_init_output
+    - name: Inicializar Docker Swarm
+      command: docker swarm init
+      register: swarm_init_output
 
-  - name: Debug - Armazenar token
-    set_fact:
-      swarm_join_token: "{{ swarm_init_output.stdout }}"
-    when: swarm_init_output.stdout is defined
+    - name: Debug - Armazenar token
+      set_fact:
+        swarm_join_token: "{{ swarm_init_output.stdout }}"
+      when: swarm_init_output.stdout is defined
 
-  - name: Acessar Nó para Ingressar no Swarm
-    hosts: "{{ host_voice }}"  # O nó onde você deseja ingressar no Swarm
-    become: yes
+- name: Acessar Nó para Ingressar no Swarm
+  hosts: "{{ host_voice }}"  # O nó onde você deseja ingressar no Swarm
+  become: yes
 
-    tasks:
-      - name: Ingressar no Docker Swarm como manager
-        command: "{{ swarm_join_token }}"
-        when: swarm_join_token is defined
+  tasks:
+    - name: Ingressar no Docker Swarm como manager
+      command: "{{ swarm_join_token }}"
+      when: swarm_join_token is defined
 
-  - name: Verificar Status do Nó no Swarm
-    hosts: swarm_master  # Volte ao nó mestre para verificar o status
-    become: yes
+- name: Verificar Status do Nó no Swarm
+  hosts: swarm_master  # Volte ao nó mestre para verificar o status
+  become: yes
 
-    tasks:
-      - name: Executar 'docker node ls'
-        command: docker node ls
+  tasks:
+    - name: Executar 'docker node ls'
+      command: docker node ls
+
 

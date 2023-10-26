@@ -11,10 +11,17 @@
       register: swarm_init_output
 
     - name: Debug - Armazenar token
-      set_fact:
-        swarm_join_token: "{{ swarm_init_output.stdout_lines | select('match', '^docker swarm join --token .*') | list | first }}"
+      lineinfile:
+        path: /var/lib/docker/swarm/worker-token
+        regexp: '^docker swarm join --token .*'
+        line: ''
+      register: swarm_join_token_task
       when: swarm_init_output.stdout is defined
-        
+
+    - set_fact:
+        swarm_join_token: "{{ swarm_join_token_task.matched | first }}"
+      when: swarm_join_token_task.matched | length > 0
+     
     - name: Debug - Mostrar o valor de swarm_join_token
       debug:
         var: swarm_init_output.stdout_lines

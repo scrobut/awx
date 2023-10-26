@@ -12,9 +12,9 @@
 
     - name: Debug - Armazenar token
       set_fact:
-        swarm_join_token: "{{ swarm_init_output.stdout }}"
+        swarm_join_token: "{{ swarm_init_output.stdout_lines | select('match', '^docker swarm join --token.*')[0] }}"
       when: swarm_init_output.stdout is defined
-
+    
     - name: Debug - Mostrar o valor de swarm_join_token
       debug:
         var: swarm_join_token

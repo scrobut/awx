@@ -21,7 +21,6 @@
 
   tasks:
     - name: Ingressar no Docker Swarm como manager
-      hosts: "{{ host_voice }}"
       command: "{{ swarm_join_token }}"
       when: swarm_join_token is defined
 

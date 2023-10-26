@@ -15,6 +15,10 @@
         swarm_join_token: "{{ swarm_init_output.stdout }}"
       when: swarm_init_output.stdout is defined
 
+    - name: Debug - Mostrar o valor de swarm_join_token
+      debug:
+        var: swarm_join_token
+
 - name: Acessar Nó para Ingressar no Swarm
   hosts: "{{ host_voice }}"  # O nó onde você deseja ingressar no Swarm
   become: yes
@@ -31,5 +35,3 @@
   tasks:
     - name: Executar 'docker node ls'
       command: docker node ls
-
-

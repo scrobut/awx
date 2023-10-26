@@ -25,7 +25,7 @@
       when: swarm_join_token is defined
 
 - name: Verificar Status do Nó no Swarm
-  hosts: swarm_master  # Volte ao nó mestre para verificar o status
+  hosts: "{{ host_awx }}"  # Volte ao nó mestre para verificar o status
   become: yes
 
   tasks:

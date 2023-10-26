@@ -12,12 +12,12 @@
 
     - name: Debug - Armazenar token
       set_fact:
-        swarm_join_token: "{{ swarm_init_output.stdout_lines | join('\n') | regex_search('^docker swarm join --token .*') }}"
+        swarm_join_token: "{{ swarm_init_output.stdout_lines | select('match', '^docker swarm join --token .*') | list | first }}"
       when: swarm_init_output.stdout is defined
-
+        
     - name: Debug - Mostrar o valor de swarm_join_token
       debug:
-        var: swarm_join_token
+        var: swarm_init_output.stdout_lines
 
 - name: Acessar Nó para Ingressar no Swarm
   hosts: "{{ host_voice }}"  # O nó onde você deseja ingressar no Swarm

@@ -202,6 +202,15 @@
         - name: Habilitando ufw  # Habilita o UFW (Uncomplicated Firewall)
           shell: sudo ufw --force enable >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           become: yes
+          
+        - name: Log Message ufw status
+          shell: echo  "\033[32m####_INFORMA_STATUS_UFW_####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+          
+        - name: Comando informa status ufw
+          shell: sudo ufw status >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+          become: yes
+         
+          
       when: not ansible_check_mode
 
   handlers:  # Lista de manipuladores a serem executados

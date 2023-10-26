@@ -1,0 +1,48 @@
+---
+- name: Inicia Deploy Gateway e Configuracao Docker Swarm # Nome do playbook
+  hosts: "{{ host_awx }}"  # Define os hosts de destino
+  become: yes  # Tornar-se root durante a execução do playbook
+  become_user: root  # Define o usuário para se tornar (root)
+  become_method: sudo  # Define o método de se tornar como sudo
+  gather_facts: yes  # Coletar fatos sobre os hosts de destino
+  tasks:  # Lista de tarefas a serem executadas
+  
+  
+  ---
+  - name: Configurar Docker Swarm
+    hosts: swarm_master  # O nó mestre onde você deseja iniciar o Swarm
+    become: yes
+
+    tasks:
+      - name: Inicializar Docker Swarm
+        command: docker swarm init
+        register: swarm_init_output
+
+      - name: Debug - Armazenar token
+        set_fact:
+          swarm_join_token: "{{ swarm_init_output.stdout }}"
+        when: swarm_init_output.stdout is defined
+
+  - name: Acessar Nó para Ingressar no Swarm
+    hosts: swarm_node  # O nó onde você deseja ingressar no Swarm
+    become: yes
+
+    tasks:
+      - name: Ingressar no Docker Swarm como manager
+        command: "{{ swarm_join_token }}"
+        when: swarm_join_token is defined
+
+  - name: Verificar Status do Nó no Swarm
+    hosts: swarm_master  # Volte ao nó mestre para verificar o status
+    become: yes
+
+    tasks:
+      - name: Executar 'docker node ls'
+        command: docker node ls
+  
+  
+  docker swarm init
+  docker swarm join-token manager
+armazenar o retonro do docker swarm join-token manager
+acessar outro host e colar o retorno docker swarm join-token manager
+executar comando docker node ls

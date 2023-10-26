@@ -182,9 +182,9 @@
           register: dotnet_sdk_install_result
           notify:
             - Log Message
-        - name: Espera 1 segundos  # Pausa por 1 segundo
+        - name: Espera 3 segundos  # Pausa por 1 segundo
           pause:
-            seconds: 1
+            seconds: 3
           notify:
             - Log Message
         - name: Log Message Iniciando deploy  # Registra uma mensagem indicando a verificação da versão do .NET

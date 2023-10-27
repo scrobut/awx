@@ -1,44 +1,34 @@
 ---
-- name: Inicia Deploy Gateway e Configuracao Docker Swarm # Nome do playbook
-  hosts: "{{ host_awx }}"  # Define os hosts de destino
-  become: yes  # Tornar-se root durante a execução do playbook
-  become_user: root  # Define o usuário para se tornar (root)
-  become_method: sudo  # Define o método de se tornar como sudo
-  gather_facts: yes  # Coletar fatos sobre os hosts de destino
-  tasks:  # Lista de tarefas a serem executadas
+- name: Inicia Deploy Gateway e Configuracao Docker Swarm
+  hosts: "{{ host_awx }}"
+  become: yes
+  become_user: root
+  become_method: sudo
+  gather_facts: yes
+  tasks:
     - name: Inicializar Docker Swarm
       command: docker swarm init
       register: swarm_init_output
 
-    - name: Debug - Armazenar token
-      lineinfile:
-        path: /var/lib/docker/swarm/worker-token
-        regexp: '^docker swarm join --token .*'
-        line: ''
-      register: swarm_join_token_task
-      when: swarm_init_output.stdout is defined
-
     - set_fact:
-        swarm_join_token: "{{ swarm_join_token_task.matched | first }}"
-      when: swarm_join_token_task.matched | length > 0
-     
-    - name: Debug - Mostrar o valor de swarm_join_token
+        swarm_join_token_task: "{{ swarm_init_output.stdout_lines | select('match', '^docker swarm join') | list | first }}"
+      when: swarm_init_output.stdout_lines | search('^Swarm initialized')
+
+    - name: Debug - Mostrar o valor de swarm_join_token_task
       debug:
-        var: swarm_init_output.stdout_lines
+        var: swarm_join_token_task
 
 - name: Acessar Nó para Ingressar no Swarm
-  hosts: "{{ host_voice }}"  # O nó onde você deseja ingressar no Swarm
+  hosts: "{{ host_voice }}"
   become: yes
-
   tasks:
     - name: Ingressar no Docker Swarm como manager
-      command: "{{ swarm_join_token }}"
-      when: swarm_join_token is defined
+      command: "{{ swarm_join_token_task }}"
+      when: swarm_join_token_task is defined
 
 - name: Verificar Status do Nó no Swarm
-  hosts: "{{ host_awx }}"  # Volte ao nó mestre para verificar o status
+  hosts: "{{ host_awx }}"
   become: yes
-
   tasks:
     - name: Executar 'docker node ls'
       command: docker node ls

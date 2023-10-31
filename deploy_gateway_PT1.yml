@@ -165,6 +165,7 @@
             seconds: 1
           notify:
             - Log Message
+  
         - name: Instala o pacote dotnet-sdk-6
           shell: apt install -y dotnet-sdk-6.0 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           async: 600

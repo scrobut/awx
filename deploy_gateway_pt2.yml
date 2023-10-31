@@ -1,85 +1,55 @@
 ---
-- name: Inicia Deploy Gateway  # Nome do playbook
-  hosts: "{{ host_awx }}"  # Define os hosts de destino
-  become: yes  # Tornar-se root durante a execução do playbook
-  become_user: root  # Define o usuário para se tornar (root)
-  become_method: sudo  # Define o metodo de se tornar como sudo
-  gather_facts: yes  # Coletar fatos sobre os hosts de destino
-  tasks:  # Lista de tarefas a serem executadas
-    
-    # Registra uma mensagem indicando a adição do usuário ao grupo Docker
-    - name: Log Message Iniciando deploy  
-      shell: echo  "\033[32m####_ADICIONANDO_USUARIO_AO_GRUPO_DOCKER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-    
-    # Adiciona o usuário ao grupo Docker
-    - name: Adiciona o usuário ao grupo Docker  
+- name: Inicia Deploy Gateway
+  hosts: "{{ host_awx }}"
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Log Message - Iniciando deploy
+      command: echo "\033[32m####_ADICIONANDO_USUARIO_AO_GRUPO_DOCKER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt
+
+    - name: Adiciona o usuário ao grupo Docker
       user:
         name: "{{ ansible_user }}"
         groups: docker
         append: yes
       become: yes
-      notify:
-        - Log Message
-    # Pausa por 1 segundo
-    - name: Espera 1 segundos  
+
+    - name: Espera 1 segundo
       pause:
         seconds: 1
-      notify:
-        - Log Message
-        
-    - name: Log Message Iniciando atualização de pacotes  
-      shell: echo  "\033[32m####_INICIANDO_UPDATE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1    
-    # Atualiza a lista de pacotes usando apt-get
-    - name: Executa o comando apt-get update  
-      shell: apt-get update -y > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Log Message - Iniciando update
+      command: echo "\033[32m####_INICIANDO_UPDATE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt
+
+    - name: Executa o comando apt-get update
+      command: apt-get update -y > /var/log/ansible_deploy_logs/deploy_log.txt
       async: 600
       poll: 0
       register: update_result
-      notify:
-        - Log Message
 
-    - name: Espera 3 segundos  # Pausa por 1 segundo
+    - name: Espera 3 segundos
       pause:
         seconds: 3
-      notify:
-        - Log Message
 
-    # Atualiza a lista de pacotes usando apt-get
-    - name: Log Message Iniciando atualização de pacotes
-      shell: echo  "\033[32m####_INICIANDO_INSTALAÇÃO_DOTNET####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+    - name: Log Message - Iniciando instalação do .NET
+      command: echo "\033[32m####_INICIANDO_INSTALAÇÃO_DOTNET####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt
+
     - name: Instale o apt-transport-https
-      hosts: "{{ host_awx }}"
-      become: yes
-      tasks:
-        - name: Atualize a lista de pacotes
-          apt:
-            update_cache: yes
-
-        - name: Instale apt-transport-https
-          apt:
-            name: apt-transport-https
-            state: present
+      apt:
+        name: apt-transport-https
+        state: present
 
     - name: Atualize a lista de pacotes novamente
-      hosts: "{{ host_awx }}"
-      become: yes
-      tasks:
-        - name: Atualize a lista de pacotes
-          apt:
-            update_cache: yes
+      apt:
+        update_cache: yes
 
-    - name: Instale o dotnet-sdk-6.0
-      hosts: "{{ host_awx }}"
-      become: yes
-      tasks:
-        - name: Instale o pacote dotnet-sdk-6.0
-          apt:
-            name: dotnet-sdk-6.0
-            state: present  
-    
-    # Registra uma mensagem indicando a verificação da versão do .NET
-    - name: Log Message escreve no arquivo echo versao do dotnet
-      shell: echo  "\033[32m####_VERSAO_DOTNET_####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+    - name: Instale o pacote dotnet-sdk-6.0
+      apt:
+        name: dotnet-sdk-6.0
+        state: present
 
-    - name: Log Message echo versao do dotnet
-      shell: dotnet --version >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+    - name: Log Message - Versão do .NET
+      command: echo "\033[32m####_VERSAO_DOTNET_####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt
+
+    - name: Exibe a versão do .NET
+      command: dotnet --version >> /var/log/ansible_deploy_logs/deploy_log.txt

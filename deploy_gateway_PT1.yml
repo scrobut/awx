@@ -121,9 +121,7 @@
         - name: Log Message Iniciando deploy  # Registra uma mensagem indicando o download do pacote de configuração do repositório do Microsoft
           shell: echo  "\033[32m####_BAIXANDO_CONF_MICROSOFT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
         - name: Baixa o pacote de configuração do repositório do Microsoft
-          get_url:
-            url: https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb
-            dest: ~/packages-microsoft-prod.deb
+          shell: wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O ~/packages-microsoft-prod.deb && \ sudo dpkg -i ~/packages-microsoft-prod.deb >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           become: yes
           notify:
             - Log Message
@@ -132,26 +130,7 @@
             seconds: 1
           notify:
             - Log Message
-        - name: Espera 8 segundos para permitir que o repositório seja configurado
-          pause:
-            seconds: 8
-          notify:
-            - Log Message
-        - name: Log Message Iniciando deploy  # Registra uma mensagem indicando a instalação do pacote de configuração do repositório do Microsoft
-          shell: echo  "\033[32m####_REALIZANDO_INSTALACAO_DOS_PACOTES_MICROSOFT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-        - name: Instala o pacote de configuração do repositório do Microsoft
-          shell: sudo dpkg -i ~/packages-microsoft-prod.deb
-          become: yes
-          become_user: root
-          become_method: sudo
-          environment:
-            LC_ALL: "C"  # Define o ambiente de localização para "C" para evitar mensagens de erro.
-          notify:
-            - Log Message
-        - name: Espera 1 segundos  # Pausa por 1 segundo
-          pause:
-            seconds: 1
-          notify:
+       
             - Log Message
         - name: Executa apt-get update (SDK) 
           shell: apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

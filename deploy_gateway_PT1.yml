@@ -130,7 +130,6 @@
       shell: echo  "\033[32m####_INICIANDO_INSTALACAO_SDK_DOTNET####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
     - name: Instala o pacote dotnet-sdk-6
       shell: sudo apt-get install -y apt-transport-https && \ sudo apt-get update && \ sudo apt-get install -y dotnet-sdk-6.0 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      when: dotnet_sdk_second_update_result.finished
       notify:
         - Log Message
 

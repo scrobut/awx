@@ -118,7 +118,7 @@
         - Log Message
    
     - name: Executa apt-get update (SDK) 
-      shell: sudo apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell:  apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       async: 600
       poll: 0
       become: yes
@@ -127,7 +127,7 @@
         - Log Message
     
     - name: Executa
-      shell: sudo apt-get install -y apt-transport-https >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell:  apt-get install -y apt-transport-https >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       async: 600
       poll: 0
       become: yes
@@ -135,14 +135,15 @@
         - Log Message
           
     - name: Executa apt-get update (SDK)
-      shell: sudo apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell:  apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       become: yes
       register: dotnet_sdk_update_result
       notify:
         - Log Message
 
     - name: Executa
-      shell: sudo apt-get install -y dotnet-sdk-6.0 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell:  apt-get install -y dotnet-sdk-6.0 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      become: yes
       notify:
         - Log Message
 

@@ -136,6 +136,8 @@
 
     - name: Executa
       shell:  apt-get install -y dotnet-sdk-6.0 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      async: 600
+      poll: 0
       become: yes
       notify:
         - Log Message

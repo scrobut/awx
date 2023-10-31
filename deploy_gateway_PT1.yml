@@ -165,14 +165,18 @@
             seconds: 1
           notify:
             - Log Message
-        - name: Instala o pacote dotnet-sdk-6 # instala os pacotes sdk .net 6.0
+        - name: Instala o pacote dotnet-sdk-6
           shell: apt install -y dotnet-sdk-6.0 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           async: 600
           poll: 0
           register: dotnet_sdk_install_result
           notify:
             - Log Message
-        - name: Espera 3 segundos  # Pausa por 1 segundo
+          async_status:
+            jid: "{{ dotnet_sdk_second_update_result.ansible_job_id }}"
+          when: dotnet_sdk_second_update_result.finished
+
+        - name: Espera 3 segundos
           pause:
             seconds: 3
           notify:

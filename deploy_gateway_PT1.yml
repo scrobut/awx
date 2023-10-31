@@ -126,26 +126,22 @@
       notify:
         - Log Message
 
-    - name: Instalação do Dotnet SDK 6.0
-      hosts: seu_host
-      become: yes
-      tasks:
-        - name: Instala o pacote apt-transport-https
-          apt:
-            name: apt-transport-https
-            state: present
-          register: apt_transport_https_result
+    - name: Instala o pacote apt-transport-https
+      apt:
+        name: apt-transport-https
+        state: present
+      register: apt_transport_https_result
 
-        - name: Atualiza a lista de pacotes
-          apt:
-            update_cache: yes
-          when: apt_transport_https_result.changed  # Dependendo do resultado da etapa anterior
+    - name: Atualiza a lista de pacotes
+      apt:
+        update_cache: yes
+      when: apt_transport_https_result.changed  # Dependendo do resultado da etapa anterior
 
-        - name: Instala o pacote dotnet-sdk-6.0
-          apt:
-            name: dotnet-sdk-6.0
-            state: present
-          when: apt_transport_https_result.changed  # Dependendo do resultado da etapa anterior
+    - name: Instala o pacote dotnet-sdk-6.0
+      apt:
+        name: dotnet-sdk-6.0
+        state: present
+      when: apt_transport_https_result.changed  # Dependendo do resultado da etapa anterior
     
     - name: Log Message Iniciando deploy  # Registra uma mensagem indicando a verificação da versão do .NET
       shell: echo  "\033[32m####_VERSAO_DOTNET_####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

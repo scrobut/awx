@@ -117,29 +117,55 @@
       notify:
         - Log Message
    
-        - Log Message
     - name: Executa apt-get update (SDK) 
-      shell: apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: sudo apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       async: 600
       poll: 0
+      become: yes
+      register: dotnet_sdk_update_result
+      notify:
+        - Log Message
+    
+    - name: Executa
+      shell: sudo apt-get install -y >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      async: 600
+      poll: 0
+      become: yes
+      notify:
+        - Log Message
+          
+    - name: Executa
+      shell: sudo apt-transport-https -y >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      async: 600
+      poll: 0
+      become: yes
+      notify:
+        - Log Message   
+
+    - name: Executa apt-get update (SDK)
+      shell: sudo apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      async: 600
+      poll: 0
+      become: yes
       register: dotnet_sdk_update_result
       notify:
         - Log Message
 
-    - name: Instala o pacote apt-transport-https
-      apt:
-        name: apt-transport-https
-        state: present
-      register: apt_transport_https_result
+    - name: Executa
+      shell: sudo apt-get install -y >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      async: 600
+      poll: 0
+      become: yes
+      notify:
+        - Log Message
 
-    - name: Atualiza a lista de pacotes
-      apt:
-        update_cache: yes
-
-    - name: Instala o pacote dotnet-sdk-6.0
-      apt:
-        name: dotnet-sdk-6.0
-        state: present
+    - name: Executa
+      shell: sudo dotnet-sdk-6.0 -y >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      async: 600
+      poll: 0
+      become: yes
+      notify:
+        - Log Message
     
     - name: Log Message Iniciando deploy  # Registra uma mensagem indicando a verificação da versão do .NET
       shell: echo  "\033[32m####_VERSAO_DOTNET_####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

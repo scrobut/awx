@@ -133,11 +133,10 @@
       become: yes
       notify:
         - Log Message
-          
-    - name: Executa apt-get update (SDK)
-      shell:  apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Executa
+      shell:  apt-get install -y dotnet-sdk-6.0 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       become: yes
-      register: dotnet_sdk_update_result
       notify:
         - Log Message
 

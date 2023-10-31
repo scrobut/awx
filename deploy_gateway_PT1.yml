@@ -104,20 +104,6 @@
       notify:
         - Log Message
 
-    - name: Log Message Iniciando deploy  # Registra uma mensagem indicando o início da instalação do .NET SDK
-      shell: echo  "\033[32m####_INICIANDO_INSTALACAO_SDK_DOTNET####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
-    - name: Instala o .NET SDK 6.0  # Instala o .NET SDK 6.0
-      block:
-        - name: Log Message
-          debug:
-            msg: "{{ ansible_date_time.iso8601 }} - Iniciando a instalação do .NET SDK 6.0"
-          when: not ansible_check_mode
-        - name: Espera 1 segundos  # Pausa por 1 segundo
-          pause:
-            seconds: 1
-          notify:
-            - Log Message
         - name: Log Message Iniciando deploy  # Registra uma mensagem indicando o download do pacote de configuração do repositório do Microsoft
           shell: echo  "\033[32m####_BAIXANDO_CONF_MICROSOFT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
         - name: Baixa o pacote de configuração do repositório do Microsoft
@@ -139,7 +125,9 @@
           register: dotnet_sdk_update_result
           notify:
             - Log Message
-        
+
+        - name: Log Message Iniciando deploy  # Registra uma mensagem indicando o início da instalação do .NET SDK
+          shell: echo  "\033[32m####_INICIANDO_INSTALACAO_SDK_DOTNET####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
         - name: Instala o pacote dotnet-sdk-6
           shell: sudo apt-get install -y apt-transport-https && \ sudo apt-get update && \ sudo apt-get install -y dotnet-sdk-6.0 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           when: dotnet_sdk_second_update_result.finished

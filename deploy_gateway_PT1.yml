@@ -154,7 +154,7 @@
         - name: Log Message Iniciando deploy  # Registra uma mensagem indicando a segunda execução do apt-get update (SDK)
           shell: echo  "\033[32m####_INICIANDO_UPDATE_SDK####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
         - name: Executa apt-get update (SDK - segunda vez) # atualiza ambiente com sdk .net 6.0
-          shell: apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+          shell: apt-get update -y >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
           async: 600
           poll: 0
           register: dotnet_sdk_second_update_result

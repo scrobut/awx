@@ -132,11 +132,8 @@
       gather_facts: no
       tasks:
         - name: Adicionar variáveis ao ~/.bashrc
-          shell: |
-            echo 'export ORION_ARCH=amd64' >> ~/.bashrc
-            echo 'export ORION_REGISTRY=dbmorion' >> ~/.bashrc
-            echo 'export ORION_ENTRYPOINT={{ host_awx }}' >> ~/.bashrc
-            echo 'export ASPNETCORE_ENVIRONMENT={{ orion_version }}' >> ~/.bashrc
+          shell: echo 'export ORION_ARCH=amd64' >> ~/.bashrc && echo 'export ORION_REGISTRY=dbmorion' >> ~/.bashrc && echo 'export ORION_ENTRYPOINT={{ host_awx }}' >> ~/.bashrc && echo 'export ASPNETCORE_ENVIRONMENT={{ orion_version }}' >> ~/.bashrc
+
 
 - name: Exibir variáveis de ambiente
   hosts: "{{ host_awx }}"

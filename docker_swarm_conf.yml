@@ -3,30 +3,29 @@
   hosts: "{{ host_awx }}"
   become: yes
   become_user: root
-  become_method: sudo
   gather_facts: yes
   tasks:
     - name: Inicializar Docker Swarm
       command: docker swarm init
       register: swarm_init_output
+      ignore_errors: true  # Ignorar erros se o Swarm já estiver inicializado
 
     - name: Verificar se o Swarm foi inicializado
       assert:
         that: "'Swarm initialized' in swarm_init_output.stdout"
-      register: swarm_initialized
-      changed_when: false
+      when: not swarm_init_output.failed  # Verificar se a inicialização teve sucesso
 
     - name: Extrair o comando de junção do Swarm
       set_fact:
         swarm_join_command: "{{ swarm_init_output.stdout | regex_search('docker swarm join --token [^ ]+ [0-9:.]+') }}"
-      when: swarm_initialized.failed == false
+      when: swarm_init_output.stdout is defined
 
 - name: Acessar Nó para Ingressar no Swarm
   hosts: "{{ host_voice }}"
   become: yes
   tasks:
     - name: Ingressar no Docker Swarm como manager
-      command: "{{ swarm_join_command }}"
+      command: "{{ swarm_join_command | default('echo Swarm não inicializado')" }}
       when: swarm_join_command is not defined
 
 - name: Verificar Status do Nó no Swarm

@@ -43,7 +43,7 @@
   become: yes
   tasks:
     - name: Ingressar no Docker Swarm como manager
-      command: "{{ lookup('file', '/tmp/swarm_join_command.txt') }}"
+      command: "{{ lookup('file', /tmp/swarm_join_command.txt) }}"
 
 
 - name: Verificar Status do Nó no Swarm

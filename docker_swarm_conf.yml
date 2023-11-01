@@ -112,7 +112,7 @@
       shell: docker node update --label-add main=true {{ host_nome_gw }}
 
 - name: Adicione a label main ao node voice
-  hosts: "{{ host_voice }}"
+  hosts: "{{ host_awx }}"
   become: yes
   tasks:
     - name: Escrever mensagem no log

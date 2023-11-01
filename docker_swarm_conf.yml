@@ -38,7 +38,6 @@
     - name: Copiar o arquivo para o host_voice a partir do host_awx usando SCP
       command: sshpass -p {{ senha_awx }} scp -o StrictHostKeyChecking=no /tmp/swarm_join_command.txt {{ user_machine }}@{{ host_voice }}:/tmp/swarm_join_command.txt    
   
-  Copy code
 - name: Acessar Nó para Ingressar no Swarm
   hosts: "{{ host_voice }}"
   become: yes

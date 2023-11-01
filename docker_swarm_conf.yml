@@ -16,9 +16,9 @@
       register: swarm_initialized
       changed_when: false
 
-    - name: Debug - Mostrar o comando de junção do Swarm
-      debug:
-        msg: "{{ swarm_init_output.stdout | regex_search('docker swarm join --token [^ ]+ [0-9:.]+') }}"
+    - name: Extrair o comando de junção do Swarm
+      set_fact:
+        swarm_join_command: "{{ swarm_init_output.stdout | regex_search('docker swarm join --token [^ ]+ [0-9:.]+') }}"
       when: swarm_initialized.failed == false
 
 - name: Acessar Nó para Ingressar no Swarm

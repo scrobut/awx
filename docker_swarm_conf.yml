@@ -121,26 +121,21 @@
     - name: Executar 'docker node ls'
       shell: docker node update --label-add voice=true {{ host_nome_voice }}
 
-- name: Adicionar variáveis ao ~/.bashrc e reconectar à VM
+- name: Adicionar variáveis ao ~/.bashrc
   hosts: "{{ host_awx }}"
+  become: yes
   gather_facts: no
   tasks:
-    - name: Definir as variáveis a serem adicionadas
-      set_fact:
-        bashrc_lines:
-          - 'export ORION_ARCH=amd64'
-          - 'export ORION_REGISTRY=dbmorion'
-          - 'export ORION_ENTRYPOINT={{ host_awx }}'
-          - 'export ASPNETCORE_ENVIRONMENT={{ orion_version }}'
-
-    - name: Adicionar as linhas ao arquivo ~/.bashrc
-      blockinfile:
-        path: ~/.bashrc
-        insertbefore: EOF
-        block: |
-          {% for line in bashrc_lines %}
-          {{ line }}
-          {% endfor %}
+    - name: Adicionar variáveis ao ~/.bashrc
+      lineinfile:
+        dest: ~/.bashrc
+        line: "{{ item }}"
+        insertafter: EOF
+      loop:
+        - 'export ORION_ARCH=amd64'
+        - 'export ORION_REGISTRY=dbmorion'
+        - 'export ORION_ENTRYPOINT={{ host_awx }}'
+        - 'export ASPNETCORE_ENVIRONMENT={{ orion_version }}'
 
 - name: Exibir variáveis de ambiente
   hosts: "{{ host_awx }}"

@@ -26,7 +26,7 @@
   tasks:
     - name: Ingressar no Docker Swarm como manager
       command: "{{ swarm_join_command }}"
-      when: swarm_join_command is not defined
+      when: swarm_join_command is defined
 
 - name: Verificar Status do Nó no Swarm
   hosts: "{{ host_awx }}"

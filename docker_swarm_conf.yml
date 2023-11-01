@@ -16,9 +16,14 @@
       register: swarm_initialized
       changed_when: false
 
+    - name: Juntar linhas da saída do comando
+      set_fact:
+        swarm_output_combined: "{{ swarm_init_output.stdout_lines | join('\n') }}"
+      when: swarm_initialized.failed == false
+
     - name: Extrair o token de junção
       set_fact:
-        swarm_join_token_task: "{{ swarm_init_output.stdout_lines | regex_search('(SWMTKN-[^ ]+)') }}"
+        swarm_join_token_task: "{{ swarm_output_combined | regex_search('(SWMTKN-[^ ]+)') }}"
       when: swarm_initialized.failed == false
 
     - name: Debug - Mostrar o valor de swarm_join_token_task

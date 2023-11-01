@@ -42,12 +42,9 @@
   hosts: "{{ host_voice }}"
   become: yes
   tasks:
-    - name: Carregar swarm_join_command do arquivo
-      include_vars:
-        file: /tmp/swarm_join_command.txt
-
     - name: Ingressar no Docker Swarm como manager
-      command: "{{ swarm_join_command }}"  # A variável agora está disponível globalmente
+      shell: "{{ lookup('file', '/tmp/swarm_join_command.txt') }}"
+
 
 - name: Verificar Status do Nó no Swarm
   hosts: "{{ host_awx }}"

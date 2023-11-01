@@ -119,7 +119,7 @@
       shell: echo "\033[32m####_INCLUINDO _LABEL_VOICE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
     - name: Executar 'docker node ls'
-      shell: docker node update --label-add main=true {{ host_nome_voice }}
+      shell: docker node update --label-add voice=true {{ host_nome_voice }}
 
 - name: Adicionar variáveis ao ~/.bashrc e reconectar à VM
   hosts: "{{ host_awx }}"

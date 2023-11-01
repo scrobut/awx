@@ -24,9 +24,10 @@
 - name: Acessar Nó para Ingressar no Swarm
   hosts: "{{ host_voice }}"
   become: yes
-  tasks:
-    - name: Ingressar no Docker Swarm como manager
-      command: "{{ swarm_join_command }}"
+  
+- name: Ingressar no Docker Swarm como manager
+  command: "{{ swarm_join_command }}"
+  when: swarm_join_command is defined
 
 - name: Verificar Status do Nó no Swarm
   hosts: "{{ host_awx }}"

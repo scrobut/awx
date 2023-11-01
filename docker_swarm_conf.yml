@@ -100,3 +100,23 @@
   tasks:
     - name: Executar 'docker node ls'
       shell: docker node ls >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+- name: Adicione a label main ao node principal
+  hosts: "{{ host_awx }}"
+  become: yes
+  tasks:
+    - name: Escrever mensagem no log
+      shell: echo  "\033[32m####_INCLUINDO _LABEL_GW####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      
+    - name: Executar 'docker node ls'
+      shell: docker node update --label-add main=true {{ host_nome_gw }}
+      
+- name: Adicione a label main ao node voice
+  hosts: "{{ host_voice }}"
+  become: yes
+  tasks:
+    - name: Escrever mensagem no log
+      shell: echo  "\033[32m####_INCLUINDO _LABEL_VOICE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Executar 'docker node ls'
+      shell: docker node update --label-add main=true {{ host_nome_voice }}      

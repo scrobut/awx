@@ -142,17 +142,14 @@
           {{ line }}
           {% endfor %}
 
-    - name: Reconectar à VM
-      command: bash -c "exec bash"
-      async: 0
-      poll: 0
-
 - name: Exibir variáveis de ambiente
   hosts: "{{ host_awx }}"
   gather_facts: no
   tasks:
+    - name: Log Message Echo variaveis de ambiente
+      shell: echo  "\033[32m####_VARIAVEIS_DE_AMBIENTE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
     - name: Exibir variáveis de ambiente
-      command: echo $ORION_ARCH && echo $ORION_REGISTRY && echo $ORION_ENTRYPOINT && echo $ASPNETCORE_ENVIRONMENT
+      command: echo $ORION_ARCH && echo $ORION_REGISTRY && echo $ORION_ENTRYPOINT && echo $ASPNETCORE_ENVIRONMENT >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
 - name: Autenticar no Docker Registry
   hosts: "{{ host_awx }}"  # Isso deve ser executado localmente

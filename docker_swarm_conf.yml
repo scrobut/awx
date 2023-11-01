@@ -24,9 +24,15 @@
 - name: Acessar Nó para Ingressar no Swarm
   hosts: "{{ host_voice }}"
   become: yes
+  
+- name: Debug swarm_join_command
+  hosts: "{{ host_voice }}"
+  gather_facts: no
   tasks:
-    - name: Ingressar no Docker Swarm como manager
-      command: "{{ swarm_join_command }}"  # A variável está definida globalmente
+    - name: Debug swarm_join_command
+      debug:
+        var: swarm_join_command
+
 
 - name: Verificar Status do Nó no Swarm
   hosts: "{{ host_awx }}"

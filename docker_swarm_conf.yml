@@ -28,7 +28,7 @@
     - name: Salvar o swarm_join_command em um arquivo
       copy:
         content: "{{ swarm_join_command }}"
-        dest: /path/to/swarm_join_command.txt
+        dest: /tmp/swarm_join_command.txt
       when: swarm_join_command is defined
 
 - name: Acessar Nó para Ingressar no Swarm
@@ -37,7 +37,7 @@
   tasks:
     - name: Carregar swarm_join_command do arquivo
       include_vars:
-        file: /path/to/swarm_join_command.txt
+        file: /tmp/swarm_join_command.txt
 
     - name: Ingressar no Docker Swarm como manager
       command: "{{ swarm_join_command }}"  # A variável agora está disponível globalmente

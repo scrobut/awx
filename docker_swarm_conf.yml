@@ -16,8 +16,9 @@
       register: swarm_initialized
       changed_when: false
 
-    - set_fact:
-        swarm_join_token_task: "{{ swarm_init_output.stdout_lines | select('match', '^docker swarm join') | list | first }}"
+    - name: Definir o token de junção
+      set_fact:
+        swarm_join_token_task: "{{ swarm_init_output.stdout_lines | select('match', '^docker swarm join') | list | join('') }}"
       when: swarm_initialized.failed == false
 
     - name: Debug - Mostrar o valor de swarm_join_token_task
@@ -38,4 +39,3 @@
   tasks:
     - name: Executar 'docker node ls'
       command: docker node ls
-

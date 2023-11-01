@@ -6,7 +6,6 @@
   gather_facts: yes
   vars:
     swarm_join_command: null  # Defina a variável como nula no início
-
   tasks:
     - name: Log Message Iniciando docker swarm
       gather_facts: no

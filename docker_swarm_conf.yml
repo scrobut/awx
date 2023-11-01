@@ -161,7 +161,7 @@
   gather_facts: no  # Não é necessário coletar fatos
 
   tasks:
-    - name: Executar o comando 'docker login' com expect
+    - name: Autenticar no Docker Registry
       expect:
         command: docker login
         responses:

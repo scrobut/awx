@@ -8,16 +8,32 @@
     swarm_join_command: null  # Defina a variável como nula no início
 
 - name: Log Message Iniciando docker swarm
-  shell: echo  "\033[32m####_INICIANDO_SWARM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+  hosts: "{{ host_awx }}"
+  gather_facts: no  # Evitar a coleta de fatos nesse passo
+  tasks:
+    - name: Escrever mensagem no log
+      command: echo  "\033[32m####_INICIANDO_SWARM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt
+
+- name: Inicializar Docker Swarm
+  hosts: "{{ host_awx }}"
+  become: yes
   tasks:
     - name: Inicializar Docker Swarm
       command: docker swarm init
       register: swarm_init_output
 
+- name: Verificar se o Swarm foi inicializado
+  hosts: "{{ host_awx }}"
+  become: yes
+  tasks:
     - name: Verificar se o Swarm foi inicializado
       assert:
         that: "'Swarm initialized' in swarm_init_output.stdout"
 
+- name: Extrair o comando de junção do Swarm
+  hosts: "{{ host_awx }}"
+  become: yes
+  tasks:
     - name: Extrair o comando de junção do Swarm
       set_fact:
         swarm_join_command: "{{ swarm_init_output.stdout | regex_search('docker swarm join --token [^ ]+ [0-9:.]+') }}"
@@ -34,7 +50,12 @@
       when: swarm_join_command is defined
 
 - name: Log Message copiando arquivo para voice
-  shell: echo  "\033[32m####_INICIANDO_SCP_PARA_VOICE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+  hosts: "{{ host_awx }}"
+  gather_facts: no
+  tasks:
+    - name: Escrever mensagem no log
+      command: echo  "\033[32m####_INICIANDO_SCP_PARA_VOICE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt
+
 - name: Copiar arquivo para o host_voice a partir do host_awx usando SCP
   hosts: "{{ host_awx }}"
   become: yes
@@ -53,17 +74,29 @@
         var: swarm_join_command_content.stdout
 
 - name: Log Message inserindo chave para conectar ao leader
-  shell: echo  "\033[32m####_INICIANDO_JOIN_MANAGER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+  hosts: "{{ host_voice }}"
+  gather_facts: no
+  tasks:
+    - name: Escrever mensagem no log
+      command: echo  "\033[32m####_INICIANDO_JOIN_MANAGER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt
 
 - name: Executar o comando a partir do arquivo swarm_join_command.txt
-  shell: "{{ swarm_join_command_content.stdout }}"
+  hosts: "{{ host_voice }}"
+  become: yes
+  tasks:
+    - name: Executar o comando a partir do arquivo swarm_join_command.txt
+      shell: "{{ swarm_join_command_content.stdout }}"
 
 - name: Log Message mostra resultado das nodes
-  shell: echo  "\033[32m####_INICIANDO_NODE_LS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+  hosts: "{{ host_awx }}"
+  become: yes
+  tasks:
+    - name: Escrever mensagem no log
+      command: echo  "\033[32m####_INICIANDO_NODE_LS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt
 
 - name: Verificar Status do Nó no Swarm
   hosts: "{{ host_awx }}"
   become: yes
   tasks:
-    - name: Executar 'docker node ls' >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+    - name: Executar 'docker node ls'
       command: docker node ls

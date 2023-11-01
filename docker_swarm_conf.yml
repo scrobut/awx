@@ -10,9 +10,15 @@
       command: docker swarm init
       register: swarm_init_output
 
+    - name: Verificar se o Swarm foi inicializado
+      assert:
+        that: "'Swarm initialized' in swarm_init_output.stdout"
+      register: swarm_initialized
+      changed_when: false
+
     - set_fact:
         swarm_join_token_task: "{{ swarm_init_output.stdout_lines | select('match', '^docker swarm join') | list | first }}"
-      when: swarm_init_output.stdout_lines | search('^Swarm initialized')
+      when: swarm_initialized.failed == false
 
     - name: Debug - Mostrar o valor de swarm_join_token_task
       debug:
@@ -32,3 +38,4 @@
   tasks:
     - name: Executar 'docker node ls'
       command: docker node ls
+

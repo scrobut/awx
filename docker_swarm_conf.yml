@@ -6,8 +6,8 @@
   gather_facts: yes
   vars:
     swarm_join_command: null  # Defina a variável como nula no início
-    
-- name: Log Message Iniciando docker swarm  
+
+- name: Log Message Iniciando docker swarm
   shell: echo  "\033[32m####_INICIANDO_SWARM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
   tasks:
     - name: Inicializar Docker Swarm
@@ -34,14 +34,14 @@
       when: swarm_join_command is defined
 
 - name: Log Message copiando arquivo para voice
-  shell: echo  "\033[32m####_INICIANDO_SCP_PARA_VOICE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1      
+  shell: echo  "\033[32m####_INICIANDO_SCP_PARA_VOICE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 - name: Copiar arquivo para o host_voice a partir do host_awx usando SCP
   hosts: "{{ host_awx }}"
   become: yes
   tasks:
     - name: Copiar o arquivo para o host_voice a partir do host_awx usando SCP
-      command: sshpass -p {{ senha_awx }} scp -o StrictHostKeyChecking=no /tmp/swarm_join_command.txt {{ user_machine }}@{{ host_voice }}:/tmp/swarm_join_command.txt    
-  
+      command: sshpass -p {{ senha_awx }} scp -o StrictHostKeyChecking=no /tmp/swarm_join_command.txt {{ user_machine }}@{{ host_voice }}:/tmp/swarm_join_command.txt
+
 - name: Acessar Nó para Ingressar no Swarm
   hosts: "{{ host_voice }}"
   become: yes
@@ -51,15 +51,16 @@
       register: swarm_join_command_content
     - debug:
         var: swarm_join_command_content.stdout
-        
+
 - name: Log Message inserindo chave para conectar ao leader
   shell: echo  "\033[32m####_INICIANDO_JOIN_MANAGER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-           - name: Executar o comando a partir do arquivo swarm_join_command.txt
-      shell: "{{ swarm_join_command_content.stdout }}"
+
+- name: Executar o comando a partir do arquivo swarm_join_command.txt
+  shell: "{{ swarm_join_command_content.stdout }}"
 
 - name: Log Message mostra resultado das nodes
   shell: echo  "\033[32m####_INICIANDO_NODE_LS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-  
+
 - name: Verificar Status do Nó no Swarm
   hosts: "{{ host_awx }}"
   become: yes

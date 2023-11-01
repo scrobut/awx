@@ -42,8 +42,11 @@
   hosts: "{{ host_voice }}"
   become: yes
   tasks:
-    - name: Ingressar no Docker Swarm como manager
-      command: "{{ lookup('file', /tmp/swarm_join_command.txt) }}"
+    - name: Ler o conteúdo do arquivo swarm_join_command.txt
+      shell: cat /tmp/swarm_join_command.txt
+      register: swarm_join_command_content
+    - debug:
+        var: swarm_join_command_content.stdout
 
 
 - name: Verificar Status do Nó no Swarm

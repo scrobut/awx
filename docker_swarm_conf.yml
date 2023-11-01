@@ -8,7 +8,6 @@
     - name: Inicializar Docker Swarm
       command: docker swarm init
       register: swarm_init_output
-      ignore_errors: true  # Ignorar erros se o Swarm já estiver inicializado
 
     - name: Verificar se o Swarm foi inicializado
       assert:
@@ -17,6 +16,7 @@
     - name: Extrair o comando de junção do Swarm
       set_fact:
         swarm_join_command: "{{ swarm_init_output.stdout | regex_search('docker swarm join --token [^ ]+ [0-9:.]+') }}"
+      when: swarm_init_output.stdout is defined
 
 - name: Acessar Nó para Ingressar no Swarm
   hosts: "{{ host_voice }}"
@@ -24,7 +24,6 @@
   tasks:
     - name: Ingressar no Docker Swarm como manager
       command: "{{ swarm_join_command }}"
-      when: swarm_join_command is defined
 
 - name: Verificar Status do Nó no Swarm
   hosts: "{{ host_awx }}"

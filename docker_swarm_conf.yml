@@ -155,3 +155,20 @@
   tasks:
     - name: Exibir variáveis de ambiente
       command: echo $ORION_ARCH && echo $ORION_REGISTRY && echo $ORION_ENTRYPOINT && echo $ASPNETCORE_ENVIRONMENT
+
+- name: Autenticar no Docker Registry
+  hosts: "{{ host_awx }}"  # Isso deve ser executado localmente
+  gather_facts: no  # Não é necessário coletar fatos
+
+  tasks:
+    - name: Executar o comando 'docker login' com expect
+      expect:
+        command: docker login
+        responses:
+          'Username:': "{{ registry_username }}"
+          'Password:': "{{ registry_password }}"
+      register: docker_login_output
+
+    - name: Exibir a saída do comando
+      debug:
+        var: docker_login_output.stdout_lines

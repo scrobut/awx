@@ -98,5 +98,5 @@
   hosts: "{{ host_awx }}"
   become: yes
   tasks:
-    - name: Executar 'docker node ls' >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      command: docker node ls
+    - name: Executar 'docker node ls'
+      shell: docker node ls >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

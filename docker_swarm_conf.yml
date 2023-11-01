@@ -25,7 +25,7 @@
   become: yes
   tasks:
     - name: Ingressar no Docker Swarm como manager
-      command: "{{ swarm_join_command | default('echo Swarm não inicializado')" }}
+      command: "{{ swarm_join_command }}"
       when: swarm_join_command is not defined
 
 - name: Verificar Status do Nó no Swarm

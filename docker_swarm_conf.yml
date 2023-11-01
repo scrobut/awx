@@ -1,5 +1,5 @@
 ---
-- name: Inicia Deploy Gateway e Configuração Docker Swarm
+- name: Inicia Deploy Gateway e Configuracao Docker Swarm
   hosts: "{{ host_awx }}"
   become: yes
   become_user: root
@@ -10,52 +10,38 @@
   tasks:
     - name: Log Message Iniciando docker swarm
       gather_facts: no
-      tasks:
-        - name: Escrever mensagem no log
-          shell: echo "\033[32m####_INICIANDO_SWARM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: echo "\033[32m####_INICIANDO_SWARM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
     - name: Inicializar Docker Swarm
       become: yes
-      tasks:
-        - name: Inicializar Docker Swarm
-          command: docker swarm init
-          register: swarm_init_output
+      command: docker swarm init
+      register: swarm_init_output
 
     - name: Verificar se o Swarm foi inicializado
       become: yes
-      tasks:
-        - name: Verificar se o Swarm foi inicializado
-          assert:
-            that: "'Swarm initialized' in swarm_init_output.stdout"
+      assert:
+        that: "'Swarm initialized' in swarm_init_output.stdout"
 
     - name: Extrair o comando de junção do Swarm
       become: yes
-      tasks:
-        - name: Extrair o comando de junção do Swarm
-          set_fact:
-            swarm_join_command: "{{ swarm_init_output.stdout | regex_search('docker swarm join --token [^ ]+ [0-9:.]+') }}"
-          when: swarm_init_output.stdout is defined
+      set_fact:
+        swarm_join_command: "{{ swarm_init_output.stdout | regex_search('docker swarm join --token [^ ]+ [0-9:.]+') }}"
+      when: swarm_init_output.stdout is defined
 
     - name: Salvar o swarm_join_command em um arquivo
       become: yes
-      tasks:
-        - name: Salvar o swarm_join_command em um arquivo
-          copy:
-            content: "{{ swarm_join_command }}"
-            dest: /tmp/swarm_join_command.txt
-          when: swarm_join_command is defined
+      copy:
+        content: "{{ swarm_join_command }}"
+        dest: /tmp/swarm_join_command.txt
+      when: swarm_join_command is defined
 
     - name: Log Message copiando arquivo para voice
       gather_facts: no
-      tasks:
-        - name: Escrever mensagem no log
-          shell: echo "\033[32m####_INICIANDO_SCP_PARA_VOICE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: echo "\033[32m####_INICIANDO_SCP_PARA_VOICE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
     - name: Copiar arquivo para o host_voice a partir do host_awx usando SCP
       become: yes
-      tasks:
-        - name: Copiar o arquivo para o host_voice a partir do host_awx usando SCP
-          command: sshpass -p {{ senha_awx }} scp -o StrictHostKeyChecking=no /tmp/swarm_join_command.txt {{ user_machine }}@{{ host_voice }}:/tmp/swarm_join_command.txt
+      command: sshpass -p {{ senha_awx }} scp -o StrictHostKeyChecking=no /tmp/swarm_join_command.txt {{ user_machine }}@{{ host_voice }}:/tmp/swarm_join_command.txt
 
     - name: Acessar Nó para Ingressar no Swarm
       become: yes
@@ -70,31 +56,23 @@
     - name: Log Message inserindo chave para conectar ao leader
       gather_facts: no
       hosts: "{{ host_voice }}"
-      tasks:
-        - name: Escrever mensagem no log
-          shell: echo "\033[32m####_INICIANDO_JOIN_MANAGER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: echo "\033[32m####_INICIANDO_JOIN_MANAGER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
     - name: Executar o comando a partir do arquivo swarm_join_command.txt
       become: yes
       hosts: "{{ host_voice }}"
-      tasks:
-        - name: Executar o comando a partir do arquivo swarm_join_command.txt
-          shell: "{{ swarm_join_command_content.stdout }}"
+      shell: "{{ swarm_join_command_content.stdout }}"
 
     - name: Log Message mostra resultado das nodes
       gather_facts: no
       hosts: "{{ host_awx }}"
       become: yes
-      tasks:
-        - name: Escrever mensagem no log
-          shell: echo "\033[32m####_INICIANDO_NODE_LS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: echo "\033[32m####_INICIANDO_NODE_LS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
     - name: Verificar Status do Nó no Swarm
       become: yes
       hosts: "{{ host_awx }}"
-      tasks:
-        - name: Executar 'docker node ls'
-          shell: docker node ls >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: docker node ls >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
 - name: Adicione a label main ao node principal
   hosts: "{{ host_awx }}"

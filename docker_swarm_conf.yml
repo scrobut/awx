@@ -21,23 +21,26 @@
         swarm_join_command: "{{ swarm_init_output.stdout | regex_search('docker swarm join --token [^ ]+ [0-9:.]+') }}"
       when: swarm_init_output.stdout is defined
 
+- name: Salvar o swarm_join_command em um arquivo
+  hosts: "{{ host_awx }}"
+  become: yes
+  tasks:
     - name: Salvar o swarm_join_command em um arquivo
       copy:
         content: "{{ swarm_join_command }}"
         dest: /path/to/swarm_join_command.txt
       when: swarm_join_command is defined
 
-- name: Carregar swarm_join_command do arquivo
-  include_vars:
-    file: /path/to/swarm_join_command.txt
-
 - name: Acessar Nó para Ingressar no Swarm
   hosts: "{{ host_voice }}"
   become: yes
   tasks:
+    - name: Carregar swarm_join_command do arquivo
+      include_vars:
+        file: /path/to/swarm_join_command.txt
+
     - name: Ingressar no Docker Swarm como manager
       command: "{{ swarm_join_command }}"  # A variável agora está disponível globalmente
-
 
 - name: Verificar Status do Nó no Swarm
   hosts: "{{ host_awx }}"
@@ -45,4 +48,3 @@
   tasks:
     - name: Executar 'docker node ls'
       command: docker node ls
-

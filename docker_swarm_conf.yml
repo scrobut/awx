@@ -18,13 +18,6 @@
         swarm_join_command: "{{ swarm_init_output.stdout | regex_search('docker swarm join --token [^ ]+ [0-9:.]+') }}"
       when: swarm_init_output.stdout is defined
 
-- name: Acessar Nó para Ingressar no Swarm
-  hosts: "{{ host_voice }}"
-  become: yes
-  tasks:
-    - name: Ingressar no Docker Swarm como manager
-      command: "{{ swarm_join_command }}"
-
 - name: Debug swarm_join_command
   hosts: "{{ host_awx }}"
   gather_facts: no
@@ -32,6 +25,13 @@
     - name: Debug swarm_join_command
       debug:
         var: swarm_join_command
+        
+- name: Acessar Nó para Ingressar no Swarm
+  hosts: "{{ host_voice }}"
+  become: yes
+  tasks:
+    - name: Ingressar no Docker Swarm como manager
+      command: "{{ swarm_join_command }}"
 
 - name: Verificar Status do Nó no Swarm
   hosts: "{{ host_awx }}"

@@ -16,9 +16,9 @@
       register: swarm_initialized
       changed_when: false
 
-    - name: Definir o token de junção
+    - name: Extrair o token de junção
       set_fact:
-        swarm_join_token_task: "{{ swarm_init_output.stdout_lines | select('match', '^docker swarm join') | list | join('') }}"
+        swarm_join_token_task: "{{ swarm_init_output.stdout_lines | regex_search('(SWMTKN-[^ ]+)') }}"
       when: swarm_initialized.failed == false
 
     - name: Debug - Mostrar o valor de swarm_join_token_task
@@ -30,7 +30,7 @@
   become: yes
   tasks:
     - name: Ingressar no Docker Swarm como manager
-      command: "{{ swarm_join_token_task }}"
+      command: "docker swarm join --token {{ swarm_join_token_task }} 192.168.18.47:2377"
       when: swarm_join_token_task is defined
 
 - name: Verificar Status do Nó no Swarm

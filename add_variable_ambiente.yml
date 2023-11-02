@@ -1,26 +1,32 @@
-- name: Criar diretórios e adicionar variáveis ao ~/.bashrc
+- name: Criar diretórios
+  become: yes
+  command_warnings: false
   hosts: "{{ host_awx }}"
-  become: yes  # Use privilégios de superusuário
-  become_user: root
   gather_facts: no
   tasks:
-    - name: Criar diretórios
-      shell: |
-        mkdir -p /var/volumes &&
-        cd /var/volumes &&
-        sudo mkdir -p \
-          backend/logs \
-          rabbitmq/logs \
-          bd/logs \
-          frontend/conf.d \
-          gateway/includes \
-          gateway/logs \
-          worker/logs \
-          gateway/logs/cdr-csv \
-          gateway/logs/cdr-custom \
-          loadbalancer/includes \
-          voice/logs \
-          voice/logs/cdr-csv \
-          voice/logs/cdr-custom
+    - name: Criar diretórios usando o módulo file
+      file:
+        path: /var/volumes
+        state: directory
+      ignore_errors: yes
+
+    - name: Criar diretórios dentro de /var/volumes
+      file:
+        path: "/var/volumes/{{ item }}"
+        state: directory
+      loop:
+        - backend/logs
+        - rabbitmq/logs
+        - bd/logs
+        - frontend/conf.d
+        - gateway/includes
+        - gateway/logs
+        - worker/logs
+        - gateway/logs/cdr-csv
+        - gateway/logs/cdr-custom
+        - loadbalancer/includes
+        - voice/logs
+        - voice/logs/cdr-csv
+        - voice/logs/cdr-custom
       ignore_errors: yes
 

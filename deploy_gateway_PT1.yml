@@ -224,5 +224,8 @@
         - name: Comando ls para informar a criação dos volumes
           shell: ls /var/volumes/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
-  handlers:
-  # Lista de manipuladores a serem executados
+  handlers: # Lista de manipuladores a serem executados
+
+    - name: Log Message  # Registra uma mensagem indicando a conclusão de uma tarefa
+      debug:
+        msg: "{{ ansible_date_time.iso8601 }} - {{ ansible_task_name }} concluído com sucesso."

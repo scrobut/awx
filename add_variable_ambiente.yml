@@ -4,22 +4,23 @@
   become_user: root
   gather_facts: no
   tasks:
-  - name: Criar diretórios
-  shell: |
-    mkdir -p /var/volumes &&
-    cd /var/volumes &&
-    sudo mkdir -p \
-      backend/logs \
-      rabbitmq/logs \
-      bd/logs \
-      frontend/conf.d \
-      gateway/includes \
-      gateway/logs \
-      worker/logs \
-      gateway/logs/cdr-csv \
-      gateway/logs/cdr-custom \
-      loadbalancer/includes \
-      voice/logs \
-      voice/logs/cdr-csv \
-      voice/logs/cdr-custom
-  ignore_errors: yes 
+    - name: Criar diretórios
+      shell: |
+        mkdir -p /var/volumes &&
+        cd /var/volumes &&
+        sudo mkdir -p \
+          backend/logs \
+          rabbitmq/logs \
+          bd/logs \
+          frontend/conf.d \
+          gateway/includes \
+          gateway/logs \
+          worker/logs \
+          gateway/logs/cdr-csv \
+          gateway/logs/cdr-custom \
+          loadbalancer/includes \
+          voice/logs \
+          voice/logs/cdr-csv \
+          voice/logs/cdr-custom
+      ignore_errors: yes
+

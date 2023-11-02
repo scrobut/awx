@@ -151,8 +151,12 @@
             - voice/logs/cdr-custom
           ignore_errors: yes
 
-        - name: Comando ls para informar a criacao dos volumes
-          shell: ls /var/volumes/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1      
+        - name: Verificar Status dos volumes criados
+          hosts: "{{ host_awx }}"
+          become: yes
+          tasks:
+            - name: Comando ls para informar a criacao dos volumes
+              shell: ls /var/volumes/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1      
       
       when: not ansible_check_mode
 

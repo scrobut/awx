@@ -218,12 +218,12 @@
       ignore_errors: yes
 
     - name: Verificar Status dos volumes criados
-      hosts: "{{ host_awx }}"
       become: yes
       tasks:
         - name: Comando ls para informar a criação dos volumes
           shell: ls /var/volumes/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
+  
+  
   handlers: # Lista de manipuladores a serem executados
 
     - name: Log Message  # Registra uma mensagem indicando a conclusão de uma tarefa

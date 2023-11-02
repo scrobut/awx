@@ -3,10 +3,10 @@
   hosts: "{{ host_awx }}" # Define os hosts de destino
   become: yes # Tornar-se root durante a execução do playbook
   become_user: root # Define o usuário para se tornar (root)
-  become_method: sudo # Define o metodo de se tornar como sudo
+  become_method: sudo # Define o método de se tornar como sudo
   gather_facts: yes # Coletar fatos sobre os hosts de destino
   tasks: # Lista de tarefas a serem executadas
-    
+
     - name: Criar diretório de logs
       # Cria um diretório para logs se ele não existir
       file:
@@ -186,9 +186,9 @@
       become: yes
 
     - name: Log Message criando volumes
-      # Registra uma mensagem indicando o início da criacao do diretorio volues
+      # Registra uma mensagem indicando o início da criação do diretório volumes
       shell: echo "\033[32m####_INICIANDO_VOLUMES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      
+
     - name: Criar diretórios usando o módulo file
       file:
         path: /var/volumes
@@ -221,9 +221,8 @@
       hosts: "{{ host_awx }}"
       become: yes
       tasks:
-        - name: Comando ls para informar a criacao dos volumes
+        - name: Comando ls para informar a criação dos volumes
           shell: ls /var/volumes/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
   handlers:
-    # Lista de manipuladores a serem executados
-
+  # Lista de manipuladores a serem executados

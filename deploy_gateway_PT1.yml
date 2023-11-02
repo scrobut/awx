@@ -68,12 +68,12 @@
       # Registra uma mensagem indicando o início do deployment
       shell: echo "\033[32m####_INICIANDO_UPGRADE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
-    - name: Executa o comando apt-get update
-      # Atualiza a lista de pacotes usando apt-get
+    - name: Executa o comando apt-get upgrade
+      # Atualiza os pacotes usando apt-get
       shell: apt-get upgrade -y > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       async: 600
       poll: 0
-      register: update_result
+      register: upgrade_result
       notify:
         - Log Message
 
@@ -216,13 +216,6 @@
         - voice/logs/cdr-csv
         - voice/logs/cdr-custom
       ignore_errors: yes
-
-    - name: Verificar Status dos volumes criados
-      become: yes
-      tasks:
-        - name: Comando ls para informar a criação dos volumes
-          shell: ls /var/volumes/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-  
   
   handlers: # Lista de manipuladores a serem executados
 

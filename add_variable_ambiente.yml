@@ -28,4 +28,9 @@
         - voice/logs/cdr-csv
         - voice/logs/cdr-custom
       ignore_errors: yes
+      
+      -name: Permissao pasta volumes
+      shell: sudo chmod 775 -R /var/volumes
+      become: yes
+
 

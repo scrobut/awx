@@ -3,7 +3,7 @@
   hosts: "{{ host_awx }}" # Define os hosts de destino
   become: yes # Tornar-se root durante a execução do playbook
   become_user: root # Define o usuário para se tornar (root)
-  become_method: sudo # Define o método de se tornar como sudo
+  become_method: sudo # Define o metodo de se tornar como sudo
   gather_facts: yes # Coletar fatos sobre os hosts de destino
   tasks: # Lista de tarefas a serem executadas
 

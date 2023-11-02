@@ -1,0 +1,16 @@
+- name: Adicionar variáveis ao ~/.bashrc
+  hosts: "{{ host_awx }}"
+  become: yes  # Tornar-se root durante a execução do playbook
+  become_user: root  # Define o usuário para se tornar (root)
+  become_method: sudo  # Define o metodo de se tornar como sudo
+  gather_facts: no
+  tasks:
+    - name: Adicionar variáveis ao ~/.bashrc
+      lineinfile:
+        dest: ~/.bashrc
+        line: "{{ item }}"
+      loop:
+        - 'export ORION_ARCH=amd64'
+        - 'export ORION_REGISTRY=dbmorion'
+        - 'export ORION_ENTRYPOINT={{ host_awx }}'
+        - 'export ASPNETCORE_ENVIRONMENT={{ orion_version }}'

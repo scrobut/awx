@@ -123,7 +123,7 @@
 
 - name: Adicionar variáveis ao ~/.bashrc
   hosts: "{{ host_awx }}"
-  become: yes
+  become: no
   gather_facts: no
   tasks:
     - name: Adicionar variáveis ao ~/.bashrc

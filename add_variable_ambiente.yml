@@ -1,6 +1,5 @@
 - name: Criar diretórios
   become: yes
-  command_warnings: false
   hosts: "{{ host_awx }}"
   gather_facts: no
   tasks:

@@ -3,10 +3,9 @@
   hosts: "{{ host_voice }}"  # Define os hosts de destino
   become: yes  # Tornar-se root durante a execução do playbook
   become_user: root  # Define o usuário para se tornar (root)
-  become_method: sudo  # Define o metodo de se tornar como sudo
+  become_method: sudo  # Define o método de se tornar como sudo
   gather_facts: yes  # Coletar fatos sobre os hosts de destino
   tasks:  # Lista de tarefas a serem executadas
-
     - name: Criar diretório de logs  # Cria um diretório para logs se ele não existir
       file:
         path: "/var/log/ansible_deploy_logs"
@@ -15,7 +14,6 @@
         group: sudo
         mode: 0755
       when: not ansible_check_mode
-
     - name: Criar arquivo de log  # Cria um arquivo de log se ele não existir
       file:
         path: "/var/log/ansible_deploy_logs/deploy_log.txt"
@@ -24,25 +22,20 @@
         group: sudo
         mode: 0644
       when: not ansible_check_mode
-
     - name: Log Message Iniciando deploy  # Registra uma mensagem indicando o início do deployment
       shell: echo  "\033[32m####_INICIANDO_UPDATE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
     - name: Executa o comando apt-get update  # Atualiza a lista de pacotes usando apt-get
       shell: apt-get update > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: update_result
       notify:
         - Log Message
-
     - name: Espera 3 segundos  # Pausa por 1 segundo
       pause:
         seconds: 3
       notify:
         - Log Message
-
     - name: Log Message Iniciando deploy  # Registra uma mensagem indicando o início da instalação de pacotes adicionais
       shell: echo  "\033[32m####_INICIANDO_INSTALACAO_DE_PACOTES_ADICIONAIS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
     - name: Instala pacotes adicionais  # Instala pacotes adicionais
       shell: apt install -y apache2-utils apt-transport-https bash-completion ca-certificates curl gnupg software-properties-common tcpdump wget ufw net-tools tree vim > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       async: 600
@@ -50,16 +43,13 @@
       register: install_result
       notify:
         - Log Message
-
     - name: Espera 2 segundos  # Pausa por 1 segundo
       pause:
         seconds: 2
       notify:
         - Log Message
-
-    - name: Log Message Iniciando deploy  # Registra uma mensagem indicando o início da instalação do Docker
+    - name: Log Message Iniciando deploy  # Registra uma mensagem indicando a instalação do Docker
       shell: echo  "\033[32m####_INICIANDO_INSTALACAO_DOCKER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
     - name: Instalando Docker  # Instala o Docker
       shell: apt install -y docker.io >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       async: 600
@@ -67,76 +57,61 @@
       register: docker_install_result
       notify:
         - Log Message
-
     - name: Espera 2 segundos  # Pausa por 1 segundo
       pause:
         seconds: 2
       notify:
         - Log Message
-
-    - name: Instala o pacote apt-transport-https  # instala os transport-https
+    - name: Instala o pacote apt-transport-https  # instala o pacote apt-transport-https
       apt:
         name: apt-transport-https
         state: present
       become: yes
       notify:
         - Log Message
-
-    - name: Espera 3 segundos  # Pausa por 1 segundo
+    - name: Espera 3 segundos  # Pausa por 3 segundos
       pause:
         seconds: 3
       notify:
         - Log Message
-
     - name: Log Message Iniciando deploy  # Registra uma mensagem indicando a segunda execução do apt-get update (SDK)
       shell: echo  "\033[32m####_INICIANDO_UPDATE_SDK####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
-    - name: Executa apt-get update (SDK - segunda vez)  # atualiza ambiente com sdk .net 6.0
+    - name: Executa apt-get update (SDK - segunda vez)  # Atualiza ambiente com SDK .NET 6.0
       shell: apt-get update >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       async: 600
       poll: 0
       register: dotnet_sdk_second_update_result
       notify:
         - Log Message
-
     - name: Espera 1 segundos  # Pausa por 1 segundo
       pause:
         seconds: 1
       notify:
         - Log Message
-
-    - name: Log Message liberacao de firewall  # Registra uma mensagem indicando a liberação de portas no firewall
+    - name: Log Message Liberação de firewall  # Registra uma mensagem indicando a liberação de portas no firewall
       shell: echo  "\033[32m####_INICIANDO_LIBERACAO_DE_PORTAS_####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
-    - name: Liberacao de portas no firewall
+    - name: Liberação de portas no firewall
       shell: sudo ufw allow 22,25,80,443,2376,2377,5432,8088,5038,8085,4789,7946/tcp && sudo ufw allow 4369,5671,5672/tcp  && sudo ufw allow 15671:15672/tcp \
         && sudo ufw allow 4789,7946,4520,4569,4521,4571,5060,5061,5065,10000:20000/udp >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       become: yes
-
-    - name: Log Message liberacao de firewall  # Registra uma mensagem indicando a habilitação do UFW (Uncomplicated Firewall)
+    - name: Log Message Habilitando UFW  # Registra uma mensagem indicando a habilitação do UFW (Uncomplicated Firewall)
       shell: echo  "\033[32m####_HABILITANDO_UFW_####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
-    - name: Habilitando ufw  # Habilita o UFW (Uncomplicated Firewall)
+    - name: Habilitando UFW  # Habilita o UFW (Uncomplicated Firewall)
       shell: sudo ufw --force enable >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       become: yes
-
-    - name: Log Message ufw status
+    - name: Log Message UFW Status
       shell: echo  "\033[32m####_INFORMA_STATUS_UFW_####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
-    - name: Comando informa status ufw
+    - name: Comando informa status UFW
       shell: sudo ufw status >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       become: yes
-
-    - name: Log Message criando volumes  # Registra uma mensagem indicando o início da criação do diretório volumes
+    - name: Log Message criando volumes  # Registra uma mensagem indicando a criação do diretório volumes
       shell: echo "\033[32m####_INICIANDO_VOLUMES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
     - name: Criar diretórios usando o módulo file
       file:
         path: /var/volumes
         state: directory
         mode: "0775"  # Define as permissões para 775 (rwxrwxr-x)
       ignore_errors: yes
-
     - name: Criar diretórios dentro de /var/volumes
       file:
         path: "/var/volumes/{{ item }}"
@@ -157,16 +132,7 @@
         - voice/logs/cdr-csv
         - voice/logs/cdr-custom
       ignore_errors: yes
-
-    - name: Verificar Status dos volumes criados
-      become: yes
-      tasks:
-        - name: Comando ls para informar a criação dos volumes
-          shell: ls /var/volumes/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-  
-  
   handlers:  # Lista de manipuladores a serem executados
-
     - name: Log Message  # Registra uma mensagem indicando a conclusão de uma tarefa
       debug:
         msg: "{{ ansible_date_time.iso8601 }} - {{ ansible_task_name }} concluído com sucesso."

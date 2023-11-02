@@ -1,13 +1,16 @@
 ---
-- name: Inicia Deploy Gateway
-  hosts: "{{ host_awx }}"
-  become: yes
-  gather_facts: yes
-  tasks:
+- name: Inicia Deploy Gateway # Nome do playbook
+  hosts: "{{ host_awx }}" # Define os hosts de destino
+  become: yes # Tornar-se root durante a execução do playbook
+  gather_facts: yes # Coletar fatos sobre os hosts de destino
+  tasks: # Lista de tarefas a serem executadas
+
     - name: Log Message - Iniciando deploy
+      # Registra uma mensagem indicando o início do deployment
       shell: echo "\033[32m####_ADICIONANDO_USUARIO_AO_GRUPO_DOCKER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
     - name: Adiciona o usuário ao grupo Docker
+      # Tarefa para adicionar o usuário ao grupo Docker
       user:
         name: "{{ ansible_user }}"
         groups: docker
@@ -15,41 +18,51 @@
       become: yes
 
     - name: Espera 1 segundo
+      # Pausa por 1 segundo
       pause:
         seconds: 1
 
     - name: Log Message - Iniciando update
+      # Registra uma mensagem indicando o início da atualização
       shell: echo "\033[32m####_INICIANDO_UPDATE####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
     - name: Executa o comando apt-get update
+      # Atualiza a lista de pacotes usando apt-get
       command: apt-get update -y > /var/log/ansible_deploy_logs/deploy_log.txt
       async: 600
       poll: 0
       register: update_result
 
     - name: Espera 3 segundos
+      # Pausa por 3 segundos
       pause:
         seconds: 3
 
     - name: Log Message - Iniciando instalação do .NET
+      # Registra uma mensagem indicando o início da instalação do .NET
       shell: echo "\033[32m####_INICIANDO_INSTALAÇÃO_DOTNET####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
     - name: Instale o apt-transport-https
+      # Tarefa para instalar o pacote apt-transport-https
       apt:
         name: apt-transport-https
         state: present
 
     - name: Atualize a lista de pacotes novamente
+      # Atualize a lista de pacotes novamente
       apt:
         update_cache: yes
 
     - name: Instale o pacote dotnet-sdk-6.0
+      # Tarefa para instalar o pacote dotnet-sdk-6.0
       apt:
         name: dotnet-sdk-6.0
         state: present
 
     - name: Log Message - Versão do .NET
+      # Registra uma mensagem indicando a verificação da versão do .NET
       shell: echo "\033[32m####_VERSAO_DOTNET_####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
     - name: Exibe a versão do .NET
+      # Tarefa para exibir a versão do .NET
       shell: dotnet --version >> /var/log/ansible_deploy_logs/deploy_log.txt

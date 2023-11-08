@@ -55,6 +55,12 @@
         name: sshpass
         state: present
 
+    - name: Instalar o pacote moby-buildx
+      # Tarefa para instalar o pacote moby-buildx
+      apt:
+        name: moby-buildx
+        state: present    
+
     - name: Espera 2 segundos
       # Pausa por 2 segundos
       pause:

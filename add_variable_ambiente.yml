@@ -3,33 +3,18 @@
   hosts: "{{ host_awx }}"
   gather_facts: no
   tasks:
-    - name: Criar diretórios usando o módulo file
-      file:
-        path: /var/volumes
-        state: directory
-        mode: "0775"  # Define as permissões para 775 (rwxrwxr-x)
-      ignore_errors: yes
 
-    - name: Criar diretórios dentro de /var/volumes
-      file:
-        path: "/var/volumes/{{ item }}"
-        state: directory
-        mode: "0775"
-      loop:
-        - backend/logs
-        - rabbitmq/logs
-        - bd/logs
-        - frontend/conf.d
-        - gateway/includes
-        - gateway/logs
-        - worker/logs
-        - gateway/logs/cdr-csv
-        - gateway/logs/cdr-custom
-        - loadbalancer/includes
-        - voice/logs
-        - voice/logs/cdr-csv
-        - voice/logs/cdr-custom
-      ignore_errors: yes
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_IMAGEM_FILES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+    
+    - name: Criar imagem docker files
+      patch: /home/awx/orion/infra/servicos/files
+      shell: docker build --no-cache --force-rm -t ${ORION_REGISTRY}/files:${ORION_ARCH}-latest .
+      
+    - name: Executar 'docker images'
+      shell: docker images --filter "reference=*files*"  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1  
+
+      
 
 
 

@@ -11,7 +11,7 @@
       register: log_result
 
     - name: acessa o diretorio docker files
-      command: cd 
+      command: cd /home/awx/orion/infra/servicos/files/
     
     - name: Criar imagem Docker 'files'
       shell: docker build --no-cache --force-rm -t ${ORION_REGISTRY}/files:${ORION_ARCH}-latest .

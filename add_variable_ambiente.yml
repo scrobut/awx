@@ -1,18 +1,37 @@
+---
 - name: Criar diretórios e definir permissões
-  become: yes
   hosts: "{{ host_awx }}"
+  become: yes
   gather_facts: no
   tasks:
-
     - name: Escrever mensagem no log
-      shell: echo "\033[32m####_INICIANDO_IMAGEM_FILES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-    
-    - name: Criar imagem docker files
-      patch: /home/awx/orion/infra/servicos/files
-      shell: docker build --no-cache --force-rm -t ${ORION_REGISTRY}/files:${ORION_ARCH}-latest .
-      
-    - name: Executar 'docker images'
-      shell: docker images --filter "reference=*files*"  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1  
+      command: echo "\033[32m####_INICIANDO_IMAGEM_FILES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt
+      async: 300
+      poll: 0
+      register: log_result
+
+    - name: Criar diretório de imagem Docker
+      file:
+        path: /home/awx/orion/infra/servicos/files
+        state: directory
+
+    - name: Criar imagem Docker 'files'
+      command: docker build --no-cache --force-rm -t ${ORION_REGISTRY}/files:${ORION_ARCH}-latest /home/awx/orion/infra/servicos/files
+      when: log_result.rc == 0
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      command: docker images --filter "reference=*files*"
+      async: 300
+      poll: 0
+      register: docker_images_result
+      when: log_result.rc == 0
+
+    - name: Escrever resultado do 'docker images' no log
+      command: echo "{{ docker_images_result.stdout }}" >> /var/log/ansible_deploy_logs/deploy_log.txt
+      async: 300
+      poll: 0
+      when: docker_images_result.rc == 0
+
 
       
 

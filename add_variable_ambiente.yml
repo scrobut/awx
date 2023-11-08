@@ -12,7 +12,8 @@
       copy:
         content: |
           #!/bin/bash
-          docker buildx build --no-cache --platform ${ORION_ARCH} -t ${ORION_REGISTRY}/files:${ORION_ARCH}-latest .
+          docker buildx build --no-cache --platform ${{ ORION_ARCH }} -t ${{ ORION_REGISTRY }}/files:${{ ORION_ARCH }}-latest /home/awx/orion/infra/servicos/files
+
         dest: /home/awx/orion/infra/servicos/files/docker_build_script.sh
         mode: '0755'
 

@@ -10,11 +10,8 @@
       poll: 0
       register: log_result
 
-    - name: acessa o diretorio docker files
-      command: cd /home/awx/orion/infra/servicos/files/
-    
     - name: Criar imagem Docker 'files'
-      shell: docker build --no-cache --force-rm -t ${ORION_REGISTRY}/files:${ORION_ARCH}-latest .
+      shell: cd /home/awx/orion/infra/servicos/files/ && docker build --no-cache --force-rm -t ${ORION_REGISTRY}/files:${ORION_ARCH}-latest .
 
     - name: Executar 'docker images' para listar imagens com 'files'
       command: docker images --filter "reference=*files*" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

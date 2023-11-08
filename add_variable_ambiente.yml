@@ -18,11 +18,11 @@
         content: |
           #!/bin/bash
           docker buildx build --no-cache --progress plain --platform ${ORION_ARCH} -t ${ORION_REGISTRY}/files:${ORION_ARCH}-latest .
-        dest: /tmp/docker_build_script.sh
+        dest: /home/awx/orion/infra/servicos/files/docker_build_script.sh
         mode: '0755'
       become: yes
 
     - name: Executar script Docker Buildx
-      command: /tmp/docker_build_script.sh
+      command: /home/awx/orion/infra/servicos/files/docker_build_script.sh
       ignore_errors: yes
       become: yes

@@ -17,10 +17,10 @@
         mode: '0755'
 
     - name: Acessar path files
-      command: cd /home/awx/orion/infra/servicos/files
+      shell: cd /home/awx/orion/infra/servicos/files/
 
     - name: Executar script Docker Buildx
-      command: ./docker_build_script.sh
+      shell: ./docker_build_script.sh
 
     - name: Executar 'docker images' para listar imagens com 'files'
       command: docker images --filter "reference=*files*" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

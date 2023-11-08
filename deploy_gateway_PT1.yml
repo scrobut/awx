@@ -34,8 +34,6 @@
     - name: Executa o comando apt-get update
       # Atualiza a lista de pacotes usando apt-get
       shell: apt-get update -y > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      async: 600
-      poll: 0
       register: update_result
       notify:
         - Log Message
@@ -71,8 +69,6 @@
     - name: Executa o comando apt-get upgrade
       # Atualiza os pacotes usando apt-get
       shell: apt-get upgrade -y > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      async: 600
-      poll: 0
       register: upgrade_result
       notify:
         - Log Message
@@ -91,8 +87,6 @@
     - name: Instala pacotes adicionais
       # Instala pacotes adicionais
       shell: apt install -y apache2-utils apt-transport-https bash-completion ca-certificates curl gnupg software-properties-common tcpdump wget ufw net-tools tree vim > /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      async: 600
-      poll: 0
       register: install_result
       notify:
         - Log Message
@@ -111,8 +105,6 @@
     - name: Instalando Docker
       # Instala o Docker
       shell: apt install -y docker.io >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      async: 600
-      poll: 0
       register: docker_install_result
       notify:
         - Log Message
@@ -131,8 +123,6 @@
     - name: Instalação de pacotes Microsoft
       # Realiza o download e a instalação de pacotes da Microsoft
       shell: wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O ~/packages-microsoft-prod.deb && sudo dpkg -i ~/packages-microsoft-prod.deb
-      async: 600
-      poll: 0
       register: https_install_result
       notify:
         - Log Message
@@ -144,8 +134,6 @@
     - name: Instalação de pacotes HTTPS
       # Instalação de pacotes HTTPS
       shell: sudo apt-get install -y apt-transport-https >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      async: 600
-      poll: 0
       register: https_install_result
       notify:
         - Log Message

@@ -5,10 +5,9 @@
   gather_facts: no
   tasks:
     - name: Escrever mensagem no log
-      command: echo "\033[32m####_INICIANDO_IMAGEM_FILES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt
-      async: 300
-      poll: 0
+      command: echo "\033[32m####_INICIANDO_IMAGEM_FILES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
+      
     - name: Acessar path files
       shell: cd /home/awx/orion/infra/servicos/files
       

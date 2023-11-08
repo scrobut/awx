@@ -8,8 +8,7 @@
       register: log_result
 
     - name: Acessar path files
-      args:
-        executable: /bin/bash  # Especifique o shell a ser usado (neste caso, /bin/bash).
+      command: /bin/bash  # Especifique o shell a ser usado (neste caso, /bin/bash).
 
     - name: Enviar script Docker Buildx
       copy:
@@ -20,12 +19,11 @@
         mode: '0755'
 
     - name: Acessar path files
-      shell: cd /home/awx/orion/infra/servicos/files
-      
+      command: cd /home/awx/orion/infra/servicos/files
+
     - name: Executar script Docker Buildx
-      shell: ./docker_build_script.sh
-    
+      command: ./docker_build_script.sh
+
     - name: Executar 'docker images' para listar imagens com 'files'
       command: docker images --filter "reference=*files*" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
-      register: docker_images_result  
+      register: docker_images_result

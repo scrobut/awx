@@ -8,7 +8,6 @@
       register: log_result
 
     - name: Acessar path files
-      shell: cd /home/awx/orion/infra/servicos/files
       args:
         executable: /bin/bash  # Especifique o shell a ser usado (neste caso, /bin/bash).
 
@@ -20,6 +19,9 @@
         dest: /home/awx/orion/infra/servicos/files/docker_build_script.sh
         mode: '0755'
 
+    - name: Acessar path files
+      shell: cd /home/awx/orion/infra/servicos/files
+      
     - name: Executar script Docker Buildx
       shell: ./docker_build_script.sh
     

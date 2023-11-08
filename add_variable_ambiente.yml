@@ -1,6 +1,7 @@
 ---
 - name: Criar diretórios e definir permissões
   hosts: "{{ host_awx }}"
+  become: yes
   gather_facts: no
   tasks:
     - name: Escrever mensagem no log

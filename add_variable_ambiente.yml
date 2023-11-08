@@ -14,6 +14,7 @@
       
     - name: Criar imagem Docker 'files'
       shell: docker buildx build --no-cache --progress plain --platform ${ORION_ARCH} -t ${ORION_REGISTRY}/files:${ORION_ARCH}-latest .
+      ignore_errors: yes
 
     - name: Executar 'docker images' para listar imagens com 'files'
       command: docker images --filter "reference=*files*" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

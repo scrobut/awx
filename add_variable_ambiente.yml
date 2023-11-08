@@ -12,7 +12,7 @@
       shell: cd /home/awx/orion/infra/servicos/files
       
     - name: Criar imagem Docker 'files'
-      shell: docker buildx build --no-cache --progress plain --platform '{{ ORION_ARCH }}' -t '{{ ORION_REGISTRY }}/files:{{ ORION_ARCH }}-latest' .
+      command: docker buildx build --no-cache --progress plain --platform {{ ORION_ARCH }} -t {{ ORION_REGISTRY }}/files:{{ ORION_ARCH }}-latest .
       ignore_errors: yes
 
     - name: Executar 'docker images' para listar imagens com 'files'

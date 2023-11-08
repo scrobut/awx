@@ -1,7 +1,6 @@
 ---
 - name: Criar diretórios e definir permissões
   hosts: "{{ host_awx }}"
-  become: yes
   gather_facts: no
   tasks:
     - name: Escrever mensagem no log
@@ -20,9 +19,11 @@
           docker buildx build --no-cache --progress plain --platform ${ORION_ARCH} -t ${ORION_REGISTRY}/files:${ORION_ARCH}-latest .
         dest: /home/awx/orion/infra/servicos/files/docker_build_script.sh
         mode: '0755'
-      become: yes
 
     - name: Executar script Docker Buildx
-      command: /home/awx/orion/infra/servicos/files/docker_build_script.sh
-      ignore_errors: yes
-      become: yes
+      shell: ./docker_build_script.sh
+    
+    - name: Executar 'docker images' para listar imagens com 'files'
+      command: docker images --filter "reference=*files*" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+      register: docker_images_result  

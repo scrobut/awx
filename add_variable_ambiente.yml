@@ -16,48 +16,54 @@
     - name: Escrever mensagem no log
       shell: echo "\033[32m####_INICIANDO_INSTALL_NVM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
-      
+
+# Adding new tasks for another host
+- name: Instalar Node.js, Angular, Ionic e NPM em outro host
+  hosts: "{{ host_awx }}"
+  become: yes
+  gather_facts: no
+  tasks:
+
     - name: Executar install nvm
       shell: nvm install 16.13.1  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: docker_images_result
+      register: nvm_install_result
 
     - name: Escrever mensagem no log
       shell: echo "\033[32m####_INICIANDO_INSTALL_ANGULAR####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
-      
+
     - name: Executar install angular
       shell: npm install -g @angular/cli@13.*  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: docker_images_result
-      
+      register: angular_install_result
+
     - name: Escrever mensagem no log
       shell: echo "\033[32m####_INICIANDO_INSTALL_IONIC####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
-      
+
     - name: Executar install angular
       shell: npm install -g @ionic/cli@6.*  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: docker_images_result  
+      register: ionic_install_result
 
     - name: Escrever mensagem no log
       shell: echo "\033[32m####_INICIANDO_INSTALL_NPM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
-      
+
     - name: Executar install angular
       shell: npm install >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: docker_images_result    
-      
+      register: npm_install_result
+
     - name: Escrever mensagem no log
       shell: echo "\033[32m####_INICIANDO_BUILD_FRONT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
-      
+
     - name: Escrever mensagem no log
       shell: cd /home/awx/fronted/ && ng build --configuration {{ front_version }} --output-path www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: log_result
-      
+      register: build_result
+
     - name: Escrever mensagem no log
       shell: echo "\033[32m####_INICIANDO_BUILD_IMAGEM_FRONT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
 
     - name: Escrever mensagem no log
       shell: docker build -t {{ ORION_REGISTRY }}/frontend:{{ ORION_ARCH }}-latest /home/awx/fronted/www/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: log_result  
-    
+      register: docker_build_result

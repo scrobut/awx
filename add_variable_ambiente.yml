@@ -5,7 +5,11 @@
   gather_facts: no
   tasks:
     - name: Executar install nvm
-      shell: nvm install 16.13.1 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: |
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+        nvm install 16.13.1 >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: nvm_install_result
 
     - name: Escrever mensagem no log

@@ -34,3 +34,7 @@
           permit = dundi_context
           qualify = 6500
           register = no
+          
+    - name: Capturar dados do arquivo dundi
+      shell: cat /var/volumes/gateway/includes/dundi_peers.conf >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: mac_result      

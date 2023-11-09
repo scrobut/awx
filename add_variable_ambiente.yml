@@ -4,20 +4,29 @@
   become: yes
   gather_facts: no
   tasks:
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_ARQUIVO_DUNDI_PERERS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Capturar endereço MAC
+      command: "ifconfig enp0s3 | awk '/ether/{{print $2}}'"
+      register: mac_result
+
     - name: Criar arquivo
       file:
         path: /var/volumes/gateway/includes/dundi_peers.conf
         state: touch
 
-    # Adiciona o texto ao arquivo
+    # Adiciona o texto ao arquivo, incluindo o endereço MAC capturado
     - name: Adicionar texto
       lineinfile:
         path: /var/volumes/gateway/includes/dundi_peers.conf
         line: |
-          [52:54:00:28:3f:be];
+          [{{ mac_result.stdout }}];
           model = symmetric
           precache = none
-          host = 10.211.55.28;
+          host = {{ host_awx }};
           port = 4520
           inkey = dundi
           outkey = dundi
@@ -25,4 +34,3 @@
           permit = dundi_context
           qualify = 6500
           register = no
-        insertafter: "# Cria um arquivo chamado 'node02.conf'"  

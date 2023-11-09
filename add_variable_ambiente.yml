@@ -21,7 +21,7 @@
       register: log_result
 
     - name: Executar install angular
-      shell: npm install -y && npm install -g @ionic/cli@6.*  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: apt install npm -y && npm install -g @ionic/cli@6.*  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: ionic_install_result
 
     - name: Escrever mensagem no log

@@ -17,7 +17,14 @@
       register: log_result
 
     - name: Executar install angular
-      shell: npm update npm -g && npm install -g @angular/cli@13.* >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      command: >
+        export NVM_DIR="$HOME/.nvm";
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh";
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion";
+        export PATH="$NVM_DIR:$PATH";
+        npm update npm -g && npm install -g @angular/cli@13.*
+      args:
+        chdir: "/home/awx/frontend/"
       register: angular_install_result
     
     

@@ -196,4 +196,33 @@
     - name: Executar 'docker images' para listar imagens com 'files'
       shell: docker images  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: docker_images_result  
-  
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_PUBLISH_BACKEND_WWW####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: publish www
+      shell: cd /home/awx/orion/backend/Orion/ && dotnet publish --no-self-contained -r linux-musl-x64 --configuration Release -o www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_IMAGEM_BACKEND####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar script Docker Buildx
+      shell: docker build -t {{ ORION_REGISTRY }}/backend:{{ ORION_ARCH }}-latest --build-arg ENVIRONMENT={{ orion_version }}  /home/awx/orion/backend/Orion/www/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_IMAGEM_BACKEND####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'backend'
+      shell: docker images --filter reference=dbmorion/backend  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_TODAS_IMAGENS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result

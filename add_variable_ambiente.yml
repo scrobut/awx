@@ -6,31 +6,58 @@
   tasks:
 
     - name: Escrever mensagem no log
-      shell: echo "\033[32m####_INICIANDO_PUBLISH_BACKEND_WWW####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: echo "\033[32m####_INICIANDO_DOWNLOAD_NVM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'nvm'
+      shell: wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_INSTALL_NVM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
       
-    - name: publish www
-      shell: cd /home/awx/orion/backend/Orion/ && dotnet publish --no-self-contained -r linux-musl-x64 --configuration Release -o www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
-    - name: Escrever mensagem no log
-      shell: echo "\033[32m####_INICIANDO_IMAGEM_BACKEND####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: log_result
-
-    - name: Executar script Docker Buildx
-      shell: docker build -t {{ ORION_REGISTRY }}/backend:{{ ORION_ARCH }}-latest --build-arg ENVIRONMENT={{ orion_version }}  /home/awx/orion/backend/Orion/www/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-
-    - name: Escrever mensagem no log
-      shell: echo "\033[32m####_INICIANDO_LISTA_IMAGEM_BACKEND####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: log_result
-
-    - name: Executar 'docker images' para listar imagens com 'backend'
-      shell: docker images --filter reference=dbmorion/backend  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+    - name: Executar install nvm
+      shell: nvm install 16.13.1  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: docker_images_result
 
     - name: Escrever mensagem no log
-      shell: echo "\033[32m####_INICIANDO_LISTA_TODAS_IMAGENS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: echo "\033[32m####_INICIANDO_INSTALL_ANGULAR####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+      
+    - name: Executar install angular
+      shell: npm install -g @angular/cli@13.*  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+      
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_INSTALL_IONIC####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+      
+    - name: Executar install angular
+      shell: npm install -g @ionic/cli@6.*  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result  
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_INSTALL_NPM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+      
+    - name: Executar install angular
+      shell: npm install >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result    
+      
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_BUILD_FRONT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+      
+    - name: Escrever mensagem no log
+      shell: cd /home/awx/fronted/ && ng build --configuration {{ front_version }} --output-path www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+      
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_BUILD_IMAGEM_FRONT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
 
-    - name: Executar 'docker images' para listar imagens com 'files'
-      shell: docker images  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: docker_images_result
+    - name: Escrever mensagem no log
+      shell: docker build -t {{ ORION_REGISTRY }}/frontend:{{ ORION_ARCH }}-latest /home/awx/fronted/www/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result  
+    

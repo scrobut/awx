@@ -6,5 +6,4 @@
   tasks:
 
     - name: publish www
-      patch: /home/awx/orion/backend/Orion
-      shell: dotnet publish --no-self-contained -r linux-musl-x64 --configuration Release -o www
+      shell: dotnet publish --no-self-contained -r linux-musl-x64 --configuration Release -o www /home/awx/orion/backend/Orion/

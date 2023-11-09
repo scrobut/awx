@@ -1,0 +1,102 @@
+---
+- name: Criar diretórios e definir permissões
+  hosts: "{{ host_awx }}"
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_IMAGEM_FILES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar script Docker Buildx
+      shell: docker build --no-cache --force-rm -t {{ ORION_REGISTRY }}/files:{{ ORION_ARCH }}-latest /home/awx/orion/infra/servicos/files/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_IMAGEM_FILES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images --filter reference=dbmorion/files  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_TODAS_IMAGENS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_IMAGEM_POSTGRES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar script Docker Buildx
+      shell: docker build --no-cache --force-rm -t {{ ORION_REGISTRY }}/postgres:{{ ORION_ARCH }}-latest /home/awx/orion/infra/servicos/postgres/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_IMAGEM_POSTGRES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images --filter reference=dbmorion/postgres  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_TODAS_IMAGENS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_IMAGEM_ASTERISK####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar script Docker Buildx
+      shell: docker build --no-cache --force-rm -t {{ ORION_REGISTRY }}/asterisk:{{ ORION_ARCH }}-latest /home/awx/orion/infra/servicos/asterisk/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_IMAGEM_ASTERISK####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images --filter reference=dbmorion/asterisk  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_TODAS_IMAGENS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_IMAGEM_GATEWAY####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar script Docker Buildx
+      shell: docker build --no-cache --force-rm -t {{ ORION_REGISTRY }}/gateway:{{ ORION_ARCH }}-latest /home/awx/orion/infra/servicos/gateway/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_IMAGEM_GATEWAY####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images --filter reference=dbmorion/gateway  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_TODAS_IMAGENS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_ARQUIVO_DUNDI_PERERS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result 
+      

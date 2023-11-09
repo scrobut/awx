@@ -10,7 +10,7 @@
       register: log_result
       
     - name: publish www
-      shell: dotnet publish --no-self-contained -r linux-musl-x64 --configuration Release -o www /home/awx/orion/backend/Orion/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: cd /home/awx/orion/backend/Orion/ && dotnet publish --no-self-contained -r linux-musl-x64 --configuration Release -o www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
 
     - name: Escrever mensagem no log
       shell: echo "\033[32m####_INICIANDO_IMAGEM_BACKEND####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

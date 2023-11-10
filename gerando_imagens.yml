@@ -231,10 +231,22 @@
       shell: echo "\033[32m####_INICIANDO_DOWNLOAD_NVM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
 
-    - name: Executar 'docker images' para listar imagens com 'nvm'
-      shell: wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: docker_images_result
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_IMAGEM_FRONTEND####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+      
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_BUILD_FRONT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
 
     - name: Escrever mensagem no log
-      shell: echo "\033[32m####_INICIANDO_INSTALL_NVM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: cd /home/awx/fronted/ && ng build --configuration {{ front_version }} --output-path www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: build_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_BUILD_IMAGEM_FRONT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
+
+    - name: Escrever mensagem no log
+      shell: docker build -t {{ ORION_REGISTRY }}/frontend:{{ ORION_ARCH }}-latest /home/awx/fronted/www/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_build_result

@@ -293,7 +293,7 @@
       register: log_result
 
     - name: Escrever mensagem no log
-      shell: cd /home/awx/frontend/ && ng build --configuration {{ front_version }} --output-path www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: cd /home/awx/orion/frontend/ && ng build --configuration {{ front_version }} --output-path www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: build_result
 
     - name: Escrever mensagem no log
@@ -301,5 +301,5 @@
       register: log_result
 
     - name: Escrever mensagem no log
-      shell: docker build -t {{ ORION_REGISTRY }}/frontend:{{ ORION_ARCH }}-latest /home/awx/frontend/www/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: docker build -t {{ ORION_REGISTRY }}/frontend:{{ ORION_ARCH }}-latest /home/awx/orion/frontend/www/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: docker_build_result

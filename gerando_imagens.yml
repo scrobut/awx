@@ -28,6 +28,29 @@
       register: docker_images_result
 
     - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_IMAGEM_RABBITMQ####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar script Docker Buildx
+      shell: docker build --no-cache --force-rm -t {{ ORION_REGISTRY }}/files:{{ ORION_ARCH }}-latest /home/awx/orion/infra/servicos/rabbit/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_IMAGEM_RABBITMQ####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images --filter reference=dbmorion/rabbit*  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_TODAS_IMAGENS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+      
+    - name: Escrever mensagem no log
       shell: echo "\033[32m####_INICIANDO_IMAGEM_POSTGRES####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
 
@@ -226,7 +249,37 @@
     - name: Executar 'docker images' para listar imagens com 'files'
       shell: docker images  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: docker_images_result
-      
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_PUBLISH_WORKER_WWW####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: publish www
+      shell: cd /home/awx/orion/worker && dotnet publish --no-self-contained -r linux-musl-x64 --configuration Release -o www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_IMAGEM_WORKER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar script Docker Buildx
+      shell: docker build -t {{ ORION_REGISTRY }}/worker:{{ ORION_ARCH }}-latest --build-arg ENVIRONMENT={{ orion_version }}  /home/awx/orion/worker/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_IMAGEM_WORKER####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'backend'
+      shell: docker images --filter reference=dbmorion/worker  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+
+    - name: Escrever mensagem no log
+      shell: echo "\033[32m####_INICIANDO_LISTA_TODAS_IMAGENS####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: log_result
+
+    - name: Executar 'docker images' para listar imagens com 'files'
+      shell: docker images  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      register: docker_images_result
+   
     - name: Escrever mensagem no log
       shell: echo "\033[32m####_INICIANDO_DOWNLOAD_NVM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
@@ -240,7 +293,7 @@
       register: log_result
 
     - name: Escrever mensagem no log
-      shell: cd /home/awx/frontend2/ && ng build --configuration {{ front_version }} --output-path www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: cd /home/awx/frontend/ && ng build --configuration {{ front_version }} --output-path www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: build_result
 
     - name: Escrever mensagem no log
@@ -248,5 +301,5 @@
       register: log_result
 
     - name: Escrever mensagem no log
-      shell: docker build -t {{ ORION_REGISTRY }}/frontend:{{ ORION_ARCH }}-latest /home/awx/fronted/www/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: docker build -t {{ ORION_REGISTRY }}/frontend:{{ ORION_ARCH }}-latest /home/awx/frontend/www/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: docker_build_result

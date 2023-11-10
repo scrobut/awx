@@ -280,26 +280,26 @@
       shell: docker images  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: docker_images_result
    
-    - name: Escrever mensagem no log
-      shell: echo "\033[32m####_INICIANDO_DOWNLOAD_NVM####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: log_result
-
-    - name: Escrever mensagem no log
-      shell: echo "\033[32m####_INICIANDO_IMAGEM_FRONTEND####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: log_result
       
     - name: Escrever mensagem no log
       shell: echo "\033[32m####_INICIANDO_BUILD_FRONT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
 
-    - name: Escrever mensagem no log
-      shell: cd /home/awx/orion/frontend/ && ng build --configuration {{ front_version }} --output-path www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: build_result
+    #- name: Escrever mensagem no log
+    #  shell: cd /home/awx/orion/frontend/ && ng build --configuration {{ front_version }} --output-path www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+    #  register: build_result
+
+    #- name: Escrever mensagem no log
+    #  shell: echo "\033[32m####_INICIANDO_IMAGEM_FRONTEND####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+    #  register: log_result
+      
+    #- name: Escrever mensagem no log
+    #  shell: docker build -t {{ ORION_REGISTRY }}/frontend:{{ ORION_ARCH }}-latest /home/awx/orion/frontend/www/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+    #  register: docker_build_result
 
     - name: Escrever mensagem no log
-      shell: echo "\033[32m####_INICIANDO_BUILD_IMAGEM_FRONT####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: echo "\033[32m####_INICIANDO_STACKUP####\033[0m" >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: log_result
-
-    - name: Escrever mensagem no log
-      shell: docker build -t {{ ORION_REGISTRY }}/frontend:{{ ORION_ARCH }}-latest /home/awx/orion/frontend/www/ >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
-      register: docker_build_result
+      
+    - name: Executando stackup
+      shell: cd /home/awx/infra/ && docker stack up -c docker-compose.yaml --with-registry-auth orion  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

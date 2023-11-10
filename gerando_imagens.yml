@@ -302,4 +302,4 @@
       register: log_result
       
     - name: Executando stackup
-      shell: cd /home/awx/infra/ && docker stack up -c docker-compose.yaml --with-registry-auth orion  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: cd /home/awx/orion/infra/ && docker stack up -c docker-compose.yaml --with-registry-auth orion  >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1

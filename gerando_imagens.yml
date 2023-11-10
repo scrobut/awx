@@ -240,7 +240,7 @@
       register: log_result
 
     - name: Escrever mensagem no log
-      shell: cd /home/awx/fronted/ && ng build --configuration {{ front_version }} --output-path www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
+      shell: cd /home/awx/frontend2/ && ng build --configuration {{ front_version }} --output-path www >> /var/log/ansible_deploy_logs/deploy_log.txt 2>&1
       register: build_result
 
     - name: Escrever mensagem no log

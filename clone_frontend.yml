@@ -5,7 +5,7 @@
   tasks:
     - name: Clonar o repositório
       git:
-        repo: "https://{{ gitlab_user }}:{{pass_gitlab}}@gitlab.com/dbm-orion/frontend.git"
+        repo: "https://{{ gitlab_user }}:{{pass_gitlab}}@gitlab.com/dbm-orion/frontend2.git"
         dest: /home/awx/orion/frontend
         clone: yes
         version: "{{ version_frontend }}"
